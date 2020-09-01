@@ -25,7 +25,7 @@
                     </td>
                     <td>
                         <table class="table table-bordered">
-                            @foreach($item->timetableChisl as $i=>$arr)
+                            @foreach($item->timetable as $i=>$arr)
                                 <tr>
                                     <td>{{$arr['z']['time']??$arr['c']['time']}}</td>
                                     @if(isset($arr['z']['time']) and  isset($arr['c']['time']))

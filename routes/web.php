@@ -29,6 +29,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', 'TemplateController@index')->name('index');
         Route::get('/form/{id?}', 'TemplateController@form')->name('form');
         Route::post('/store/', 'TemplateController@store')->name('store');
+        Route::any('/timetablesCreate/', 'TemplateController@timetablesCreate')->name('timetablesCreate');
     });
     
     //Пары

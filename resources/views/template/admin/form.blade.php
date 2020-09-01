@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('h1')
-    <a href="{{route($routes['index'])}}">Расписание</a> \ Создание расписания
+    <a href="{{route($routes['index'])}}">Шаблоны</a> \ Создание шаблон
 @endsection
 @section('actions')
     <a href="{{route($routes['form'])}}" class="btn btn-success">Добавить</a>
