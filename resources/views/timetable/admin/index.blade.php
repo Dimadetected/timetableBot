@@ -21,50 +21,50 @@
                     </div>
                     <div class="text-center d-md-none">
                         <hr>
-                    @php $printArr = $item->timetable ; $j = 0 @endphp
-                    @foreach( $printArr as $i=>$arr)
-                        @php $j++ @endphp
-                        <div class="  ">
-                            <div class="h3 text-success">{{$arr['z']['time']??$arr['c']['time']}}</div>
-                            @if(isset($arr['z']['time']) and  isset($arr['c']['time']))
-                                @if($arr['z']['lecture'] == isset($arr['c']['lecture']))
-                                    <span>{{$arr['z']['lecture']}}</span>
-                                    <span>{{$arr['z']['teacher']}}</span><br>
-                                @else
-                                    <span>
+                        @php $printArr = $item->timetable ; $j = 0 @endphp
+                        @foreach( $printArr as $i=>$arr)
+                            @php $j++ @endphp
+                            <div class="  ">
+                                <div class="h3 text-success">{{$arr['z']['time']??$arr['c']['time']}}</div>
+                                @if(isset($arr['z']['time']) and  isset($arr['c']['time']))
+                                    @if($arr['z']['lecture'] == isset($arr['c']['lecture']))
+                                        <span>{{$arr['z']['lecture']}}</span>
+                                        <span>{{$arr['z']['teacher']}}</span><br>
+                                    @else
+                                        <span>
                                                 {{$arr['c']['lecture']}}
-                                        {{$arr['c']['teacher']}}<br>
+                                            {{$arr['c']['teacher']}}<br>
                                                <br>
                                             </span>
-                                    <span>
+                                        <span>
                                                 {{$arr['z']['teacher']}}
-                                        {{$arr['z']['lecture']}}
+                                            {{$arr['z']['lecture']}}
                                             
                                             </span>
-                                @endif
-                            @else
-                                @if(isset($arr['c']['lecture']))
-                                    <span style="border-bottom: 1px solid gray">
+                                    @endif
+                                @else
+                                    @if(isset($arr['c']['lecture']))
+                                        <span style="border-bottom: 1px solid gray">
                                                 {{$arr['c']['lecture']}} {{$arr['c']['teacher']}} <br>
                                             </span>
-                                    <span style="border-bottom: 1px solid gray">
+                                        <span >
                                                 Chill Time
                                             </span>
-                                @elseif(isset($arr['z']['lecture']))
-                                    <span style="border-bottom: 1px solid gray">
+                                    @elseif(isset($arr['z']['lecture']))
+                                        <span style="border-bottom: 1px solid gray">
                                                 Chill Time<br>
                                                 
                                             </span>
-                                    <span>
+                                        <span>
                                                 {{$arr['z']['lecture']}}
-                                        {{$arr['z']['teacher']}}
+                                            {{$arr['z']['teacher']}}
                                             </span>
+                                    @endif
                                 @endif
-                            @endif
-                        </div>
-                        <hr>
-                    @endforeach
-                    <br>
+                            </div>
+                            <hr>
+                        @endforeach
+                        <br>
                     </div>
                     <table class="table table-bordered d-none d-md-table">
                         @php $printArr = $item->timetable ; $j = 0 @endphp
