@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('h1')
-    Группы
+    Типы пользователей
 @endsection
 @section('actions')
     <a href="{{route($routes['form'])}}" class="btn btn-success">Добавить</a>
@@ -12,7 +12,6 @@
             <thead>
             <tr>
                 <th>Название</th>
-                <td>Староста</td>
                 <td></td>
             </tr>
             </thead>
@@ -20,7 +19,6 @@
             @foreach($items as $item)
                 <tr>
                     <td>{{$item->name}}</td>
-                    <td>{{$item->user->name}}</td>
                     <td class="text-right"><a href="{{route($routes['form'],$item->id)}}" class="btn btn-primary">Редактировать</a></td>
                 </tr>
             @endforeach

@@ -15,12 +15,5 @@ class Timetable extends Model
     {
         return $this->belongsTo('App\Models\Group');
     }
-    public function faculty()
-    {
-        return $this->belongsTo('App\Models\Faculty');
-    }
-    public function course()
-    {
-        return $this->belongsTo('App\Models\Course');
-    }
+  
 }

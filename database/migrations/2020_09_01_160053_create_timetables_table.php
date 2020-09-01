@@ -15,11 +15,8 @@ class CreateTimetablesTable extends Migration
     {
         Schema::create('timetables', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
             $table->text('type')->nullable();
             $table->integer('group_id')->nullable();
-            $table->integer('faculty_id')->nullable();
-            $table->integer('course_id')->nullable();
             $table->timestamps();
         });
     }

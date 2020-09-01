@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FacultyFormRequest;
 use App\Http\Requests\GroupFormRequest;
+use App\Models\Course;
 use App\Models\Faculty;
 use App\Models\Group;
+use App\Models\UsersType;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -20,7 +22,7 @@ class GroupController extends Controller
         'form' => 'admin.groups.form',
         'store' => 'admin.groups.store',
     ];
-    
+    private $usesTypeId = 1;
     public function index()
     {
         $items = Group::query()->get();
@@ -31,13 +33,18 @@ class GroupController extends Controller
     
     public function form($id = FALSE)
     {
-        $users = User::query()->get();
+        $usersType = UsersType::query()->find($this->usesTypeId);
+        $users = User::query()->where('users_type_id',$usersType->id)->get();
+        
         $item = new Group();
         if ($id)
             $item = Group::query()->find($id);
         
+        $courses = Course::query()->get();
+        $faculties = Faculty::query()->get();
+        
         $routes = $this->routes;
-        return view($this->views['form'], compact('item', 'routes','users'));
+        return view($this->views['form'], compact('item', 'routes','users','courses','faculties'));
     }
     
     public function store(GroupFormRequest $request)
@@ -48,7 +55,9 @@ class GroupController extends Controller
             'id' => $id,
         ], [
             'name' => $request->name,
-            'user_id' => $request->user_id
+            'user_id' => $request->user_id,
+            'course_id' => $request->course_id,
+            'faculty_id' => $request->faculty_id,
         ]);
         
         return redirect()->route($this->routes['index']);

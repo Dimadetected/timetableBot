@@ -13,10 +13,28 @@
                 @csrf
                 <input type="text" hidden name="id" value="{{$item->id}}">
                 <div class="form-group">
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{$item->name}}" id="name" name="name" placeholder="Введите название факультета">
+                    <label for="name">Название группы: </label>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{$item->name}}" id="name" name="name">
                 </div>
                 <div class="form-group">
-                    <select name="user_id" id="" class="form-control">
+                    <label for="course_id">Номер курса: </label>
+                    <select name="course_id" id="course_id" class="form-control">
+                        @foreach($courses as $course)
+                            <option value="{{$course->id}}" @if($course->id == $item->course_id) selected @endif >{{$course->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="faculty_id">Факультет: </label>
+                    <select name="faculty_id" id="faculty_id" class="form-control">
+                        @foreach($faculties as $faculty)
+                            <option value="{{$faculty->id}}" @if($faculty->id == $item->faculty_id) selected @endif >{{$faculty->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="user_id">Староста: </label>
+                    <select name="user_id" id="user_id" class="form-control">
                         @foreach($users as $user)
                             <option value="{{$user->id}}" @if($user->id == $item->user_id) selected @endif >{{$user->name}}</option>
                         @endforeach
