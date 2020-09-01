@@ -15,7 +15,7 @@ class AddFieldsToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->text('birthday')->nullable();
-            $table->integer('type')->nullable();
+            $table->integer('users_type_id')->nullable();
             $table->integer('group_id')->nullable();
             $table->integer('faculty_id')->nullable();
             $table->integer('course_id')->nullable();
