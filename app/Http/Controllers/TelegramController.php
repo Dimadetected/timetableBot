@@ -62,14 +62,17 @@ class TelegramController extends Controller
             if (is_null($user->group_id)) {
                 $this->newUser();
             } else {
-//                switch ($this->text) {
-//                    case '/start':
-//                    case '/menu':
-//                    default:
-//                        $this->showMenu();
-                $this->timetableSend();
-//                }
-            
+                switch ($this->text) {
+                    case '/today':
+                        $this->timetableSend(1);
+                        break;
+                    case '/tomorrow':
+                        $this->timetableSend(2);
+                        break;
+                    default:
+                        $this->showMenu();
+                }
+                
             }
         }
     }
@@ -77,13 +80,9 @@ class TelegramController extends Controller
     public function showMenu($info = NULL)
     {
         $message = '';
-        if ($info) {
-            $message .= $info . chr(10);
-        }
-        $message .= '/menu' . chr(10);
-        $message .= '/getGlobal' . chr(10);
-        $message .= '/getTicker' . chr(10);
-        $message .= '/getCurrencyTicker' . chr(10);
+        
+        $message .= '/today' . chr(10);
+        $message .= '/tomorrow' . chr(10);
         
         $this->sendMessage($message);
     }
@@ -107,11 +106,13 @@ class TelegramController extends Controller
         $this->telegram->sendMessage($data);
     }
     
-    public function timetableSend()
+    public function timetableSend($flag = FALSE)
     {
-        $date = Carbon::parse(\request('date', now()));
-        if (now()->hour > 16)
+        if ($flag == 1)
+            $date = Carbon::parse(\request('date', now()));
+        else
             $date = Carbon::parse(\request('date', now()->addDay()));
+        
         $timetable = Timetable::query()
             ->where('date', 'LIKE', '%' . $date->toDateString() . '%')
 //            ->where('group_id', $this->user->group_id)
