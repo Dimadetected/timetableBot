@@ -65,12 +65,12 @@ class TelegramController extends Controller
 //                        $this->showMenu();
 //                }
                 $inline_keyboard = [
-                    'inline_keyboard'=>[
+                    'inline_keyboard'=>json_encode([
                         [
                             ['text'=>'Сегодня', 'callback_data'=>'today'],
                             ['text'=>'Завтра', 'callback_data'=>'tuesday']
                         ],
-                    ]
+                    ])
                 ];
     
                 $response = $this->telegram->sendMessage([
