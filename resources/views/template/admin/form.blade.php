@@ -31,7 +31,7 @@
                         <label for="online">Тип: </label>
                         <select name="online" id="online" class="form-control">
                             <option value="null">Очно</option>
-                            <option value="1">Дистанционно</option>
+                            <option @if($item->online == 1) selected @endif value="1">Дистанционно</option>
                         </select>
                     </div>
                 </div>
