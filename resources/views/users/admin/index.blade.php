@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('h1')
-    Факультеты
+    Курсы
 @endsection
 @section('actions')
     <a href="{{route($routes['form'])}}" class="btn btn-success">Добавить</a>
@@ -11,7 +11,10 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Название</th>
+                <th>Имя</th>
+                <th>Тип</th>
+                <th>Факультет</th>
+                <th>Группа</th>
                 <th></th>
             </tr>
             </thead>
@@ -19,6 +22,10 @@
             @foreach($items as $item)
                 <tr>
                     <td>{{$item->name}}</td>
+                    <td>{{$item->users_type->name}}</td>
+                    
+                    <td>{{$item->group->faculty->name??''}}</td>
+                    <td>{{$item->group->name}}</td>
                     <td class="text-right"><a href="{{route($routes['form'],$item->id)}}" class="btn btn-primary">Редактировать</a></td>
                 </tr>
             @endforeach

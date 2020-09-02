@@ -13,9 +13,9 @@ use \Illuminate\Support\Facades\Auth;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('set-hook', 'TelegramController@setWebHook');
-Route::get('get-me', 'TelegramController@getMe');
+
 Route::post('/'.env('TELEGRAM_BOT_TOKEN') . '/webhook', 'TelegramController@handleRequest');
+
 Route::prefix('admin')->name('admin.')->group(function () {
     
     //Расписание
@@ -24,6 +24,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', 'TimetableController@index')->name('index');
         Route::get('/form/{id?}', 'TimetableController@form')->name('form');
         Route::post('/store/', 'TimetableController@store')->name('store');
+    });
+    //Расписание
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', 'UserController@index')->name('index');
+        Route::get('/form/{id?}', 'UserController@form')->name('form');
+        Route::post('/store/', 'UserController@store')->name('store');
     });
     
     //Шаблоны

@@ -12,7 +12,7 @@
             <thead>
             <tr>
                 <th>Название</th>
-                <td></td>
+                <th></th>
             </tr>
             </thead>
             <tbody>

@@ -18,23 +18,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Models\Group');
     }
-    public function faculty()
-    {
-        return $this->belongsTo('App\Models\Faculty');
-    }
-    public function course()
-    {
-        return $this->belongsTo('App\Models\Course');
-    }
+    
  
     
     /**
      * The attributes that are mass assignable.
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    protected $guarded=['id'];
     
     /**
      * The attributes that should be hidden for arrays.

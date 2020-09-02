@@ -31,7 +31,9 @@
                 </button>
                 <div class="collapse navbar-collapse " id="navbarNavAltMarkup">
                     <div class="navbar-nav ">
+                        <a class="nav-link" href="{{route('admin.users.index')}}">Пользователи</a>
                         <a class="nav-link" href="{{route('admin.lectures.index')}}">Предметы</a>
+                        <a class="nav-link" href="{{route('admin.templates.index')}}">Шаблоны</a>
                         <a class="nav-link" href="{{route('admin.courses.index')}}">Курсы</a>
                         <a class="nav-link" href="{{route('admin.faculties.index')}}">Факультеты</a>
                         <a class="nav-link" href="{{route('admin.groups.index')}}">Группы</a>

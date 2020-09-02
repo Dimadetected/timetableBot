@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Telegram\Bot\Api;
@@ -11,6 +12,7 @@ class TelegramController extends Controller
     protected $chat_id;
     protected $username;
     protected $text;
+    
     public function __construct()
     {
         $this->telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
@@ -27,27 +29,24 @@ class TelegramController extends Controller
         $url = 'https://kubsu.4wr.ru/' . env('TELEGRAM_BOT_TOKEN') . '/webhook';
         $response = $this->telegram->setWebhook(['url' => $url]);
         
-        return $response == true ? $response : dd($response);
+        return $response == TRUE ? $response : dd($response);
     }
+    
     public function handleRequest(Request $request)
     {
         $this->chat_id = $request['message']['chat']['id'];
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
         
-        $this->telegram->sendMessage([
-            'chat_id' => $this->chat_id,
-            'text' => '123'
-        ]);
-//        switch ($this->text) {
-//            case '/start':
-//            case '/menu':
-//            default:
-//                $this->showMenu();
-//        }
+        switch ($this->text) {
+            case '/start':
+            case '/menu':
+            default:
+                $this->showMenu();
+        }
     }
     
-    public function showMenu($info = null)
+    public function showMenu($info = NULL)
     {
         $message = '';
         if ($info) {
@@ -61,9 +60,7 @@ class TelegramController extends Controller
         $this->sendMessage($message);
     }
     
-    
-    
-    protected function sendMessage($message, $parse_html = false)
+    protected function sendMessage($message, $parse_html = FALSE)
     {
         $data = [
             'chat_id' => $this->chat_id,
