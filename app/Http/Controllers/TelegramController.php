@@ -64,19 +64,19 @@ class TelegramController extends Controller
 //                    default:
 //                        $this->showMenu();
 //                }
-                $inline_keyboard = [
-                    'inline_keyboard'=>json_encode([
-                        [
-                            ['text'=>'Сегодня', 'callback_data'=>'today'],
-                            ['text'=>'Завтра', 'callback_data'=>'tuesday']
-                        ],
-                    ])
-                ];
+//                $inline_keyboard = [
+//                    'inline_keyboard'=>json_encode([
+//                        [
+//                            ['text'=>'Сегодня', 'callback_data'=>'today'],
+//                            ['text'=>'Завтра', 'callback_data'=>'tuesday']
+//                        ],
+//                    ])
+//                ];
     
                 $response = $this->telegram->sendMessage([
                     'chat_id' => $this->chat_id,
                     'text' => 'Выбери расписание: ',
-                    'reply_markup' => $inline_keyboard
+//                    'reply_markup' => $inline_keyboard
                 ]);
             }
         }
