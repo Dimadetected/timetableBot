@@ -64,16 +64,9 @@ class TelegramController extends Controller
 //                    case '/start':
 //                    case '/menu':
 //                    default:
-                        $this->showMenu();
+//                        $this->showMenu();
+                        $this->timetableSend();
 //                }
-//                $inline_keyboard = [
-//                    'inline_keyboard'=>json_encode([
-//                        [
-//                            ['text'=>'Сегодня', 'callback_data'=>'today'],
-//                            ['text'=>'Завтра', 'callback_data'=>'tuesday']
-//                        ],
-//                    ])
-//                ];
     
             
             }
@@ -114,8 +107,6 @@ class TelegramController extends Controller
     public function timetableSend()
     {
         $date = Carbon::parse(\request('date', now()));
-        $this->telegram->sendMessage([
-        
-        ]);
+        $this->sendMessage('Расписание на завтра:');
     }
 }
