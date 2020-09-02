@@ -39,21 +39,27 @@ class TelegramController extends Controller
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
         
-        $user = \App\User::query()->firstOrCreate([
-            'tg_id' => $this->chat_id,
-            'email' => $this->chat_id . '@kubsuBot.ru',
-        ])->first();
-        if (!isset($user->name)) {
-            if (is_null($user->remember_token)) {
-                $this->telegram->sendMessage([
-                    'chat_id' => $this->chat_id,
-                    'text' => 'Введи ФИО',
-                ]);
-                $user->update(['remember_token' => 1]);
-            }else{
-                $user->update(['name'=>$this->text]);
-            }
-        }
+        $this->telegram->sendMessage([
+            'chat_id' => $this->chat_id,
+            'text' =>$this->chat_id
+        ]);
+//        $user = \App\User::query()->firstOrCreate([
+//            'tg_id' => $this->chat_id,
+//            'email' => $this->chat_id . '@kubsuBot.ru',
+//        ])->first();
+//
+//        if (!isset($user->name)) {
+//            if (is_null($user->remember_token)) {
+//                $this->telegram->sendMessage([
+//                    'chat_id' => $this->chat_id,
+//                    'text' => 'Введи ФИО',
+//                ]);
+//                $user->update(['remember_token' => 1]);
+//            }else{
+//                $user->update(['name'=>$this->text]);
+//            }
+//        }
+        
         switch ($this->text) {
             case '/start':
             case '/menu':
