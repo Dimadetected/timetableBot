@@ -108,10 +108,13 @@ class TelegramController extends Controller
     
     public function timetableSend($flag = FALSE)
     {
-        if ($flag == 1)
+        if ($flag == 1) {
+            $startMessage = 'Расписание на сегодня:';
             $date = Carbon::parse(\request('date', now()));
-        else
+        } else{
+            $startMessage = 'Расписание на завтра:';
             $date = Carbon::parse(\request('date', now()->addDay()));
+        }
         
         $timetable = Timetable::query()
             ->where('date', 'LIKE', '%' . $date->toDateString() . '%')
@@ -126,6 +129,6 @@ class TelegramController extends Controller
             if (isset($arr[$type]))
                 $message .= $arr[$type]['time'] . ' | ' . $arr[$type]['lecture'] . ' | ' . $arr[$type]['teacher'] . PHP_EOL;
         
-        $this->sendMessage('Расписание на завтра:' . PHP_EOL . $message);
+        $this->sendMessage($startMessage . ' ' . PHP_EOL . $message);
     }
 }
