@@ -25,7 +25,7 @@
                     <td>{{$item->users_type->name}}</td>
                     
                     <td>{{$item->group->faculty->name??''}}</td>
-                    <td>{{$item->group->name}}</td>
+                    <td>{{$item->group->name??''}}</td>
                     <td class="text-right"><a href="{{route($routes['form'],$item->id)}}" class="btn btn-primary">Редактировать</a></td>
                 </tr>
             @endforeach
