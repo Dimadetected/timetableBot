@@ -41,6 +41,7 @@ class TelegramController extends Controller
         
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
+        ],[
             'email' => $this->chat_id . '@kubsuBot.ru',
         ])->first();
 
