@@ -17,4 +17,12 @@ class TelegramController extends Controller
         $response = $this->telegram->getMe();
         return $response;
     }
+    
+    public function setWebHook()
+    {
+        $url = 'https://kubsu.4wr.ru/' . env('TELEGRAM_BOT_TOKEN') . '/webhook';
+        $response = $this->telegram->setWebhook(['url' => $url]);
+        
+        return $response == true ? redirect()->back() : dd($response);
+    }
 }
