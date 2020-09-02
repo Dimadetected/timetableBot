@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Timetable;
 use Carbon\Carbon;
 use http\Client\Curl\User;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ class TelegramController extends Controller
     protected $chat_id;
     protected $username;
     protected $text;
+    protected $user;
     
     public function __construct()
     {
@@ -46,8 +48,8 @@ class TelegramController extends Controller
             'email' => $this->chat_id . '@kubsuBot.ru',
             'password' => bcrypt(1),
         ]);
-        $this->showMenu();
-    
+        
+        $this->user = $user;
         
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
@@ -65,9 +67,8 @@ class TelegramController extends Controller
 //                    case '/menu':
 //                    default:
 //                        $this->showMenu();
-                        $this->timetableSend();
+                $this->timetableSend();
 //                }
-    
             
             }
         }
@@ -86,9 +87,11 @@ class TelegramController extends Controller
         
         $this->sendMessage($message);
     }
-    public function newUser(){
-        $message = 'Привет. Скоро твой аккаунт подтвердят и ты будешь получать расписание!';
     
+    public function newUser()
+    {
+        $message = 'Привет. Скоро твой аккаунт подтвердят и ты будешь получать расписание!';
+        
         $this->sendMessage($message);
     }
     
@@ -107,6 +110,21 @@ class TelegramController extends Controller
     public function timetableSend()
     {
         $date = Carbon::parse(\request('date', now()));
-        $this->sendMessage('Расписание на завтра:');
+        if (now()->hour > 16)
+            $date = Carbon::parse(\request('date', now()->addDay()));
+        $timetable = Timetable::query()
+            ->where('date', 'LIKE', '%' . $date->toDateString() . '%')
+//            ->where('group_id', $this->user->group_id)
+            ->where('group_id', 1)
+            ->first();
+        $message = '';
+        $type = 'c';
+        if ($date->weekOfYear % 2 == 0)
+            $type = 'z';
+        foreach ($timetable->timetable as $times => $arr)
+            if (isset($arr[$type]))
+                $message .= $arr[$type]['time'] . ' | ' . $arr[$type]['lecture'] . ' | ' . $arr[$type]['teacher'] . PHP_EOL;
+        
+        $this->sendMessage('Расписание на завтра:' . PHP_EOL . $message);
     }
 }
