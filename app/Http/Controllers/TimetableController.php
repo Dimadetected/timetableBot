@@ -140,24 +140,6 @@ class TimetableController extends Controller
         return redirect()->route($this->routes['index']);
     }
     
-    public function timetablesCreate()
-    {
-        $period = CarbonPeriod::create(now(), now()->addWeek());
-        $templates = Timetable::query()->get();
-        
-        foreach ($templates as $template) {
-            foreach ($period as $date) {
-                if ($date->dayOfWeek == $template->dayOfWeek) {
-                    Timetable::query()->updateOrCreate([
-                        'date' => $date->copy()->format('Y-m-d 00:00:00'),
-                        'group_id' => $template->group_id,
-                        'dayOfWeek' => $template->dayOfWeek
-                    ], [
-                        'type' => $template->type,
-                    ]);
-                    break;
-                }
-            }
-        }
-    }
+    
+    
 }
