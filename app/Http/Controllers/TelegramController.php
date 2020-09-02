@@ -41,29 +41,44 @@ class TelegramController extends Controller
         
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
-        ],[
+        ], [
             'name' => 'Ждем имя',
             'email' => $this->chat_id . '@kubsuBot.ru',
             'password' => bcrypt(1),
         ]);
-
+        
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
-                $this->telegram->sendMessage([
-                    'chat_id' => $this->chat_id,
-                    'text' => 'Введи ФИО',
-                ]);
+                $this->sendMessage('Введи ФИО');
                 $user->update(['remember_token' => 1]);
-            }else{
-                $user->update(['name'=>$this->text]);
+            } else {
+                $user->update(['name' => $this->text]);
             }
-        }
-        
-        switch ($this->text) {
-            case '/start':
-            case '/menu':
-            default:
-                $this->showMenu();
+        } else {
+            if (is_null($user->group_id)) {
+                $this->newUser();
+            } else {
+//                switch ($this->text) {
+//                    case '/start':
+//                    case '/menu':
+//                    default:
+//                        $this->showMenu();
+//                }
+                $inline_keyboard = [
+                    'inline_keyboard'=>[
+                        [
+                            ['text'=>'Сегодня', 'callback_data'=>'today'],
+                            ['text'=>'Завтра', 'callback_data'=>'tuesday']
+                        ],
+                    ]
+                ];
+    
+                $response = $this->telegram->sendMessage([
+                    'chat_id' => $this->chat_id,
+                    'text' => 'Выбери расписание: ',
+                    'reply_markup' => $inline_keyboard
+                ]);
+            }
         }
     }
     
@@ -78,6 +93,11 @@ class TelegramController extends Controller
         $message .= '/getTicker' . chr(10);
         $message .= '/getCurrencyTicker' . chr(10);
         
+        $this->sendMessage($message);
+    }
+    public function newUser(){
+        $message = 'Привет. Скоро твой аккаунт подтвердят и ты будешь получать расписание!';
+    
         $this->sendMessage($message);
     }
     
