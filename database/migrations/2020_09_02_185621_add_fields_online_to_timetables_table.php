@@ -14,7 +14,7 @@ class AddFieldsOnlineToTimetablesTable extends Migration
     public function up()
     {
         Schema::table('timetables', function (Blueprint $table) {
-            $table->integer('integer')->nullable();
+            $table->integer('online')->nullable();
         });
     }
 

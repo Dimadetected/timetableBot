@@ -14,7 +14,7 @@ class AddFieldsOnlineToTemplatesTable extends Migration
     public function up()
     {
         Schema::table('templates', function (Blueprint $table) {
-            $table->integer('integer')->nullable();
+            $table->integer('online')->nullable();
         });
     }
 
