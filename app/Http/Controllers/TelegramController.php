@@ -46,6 +46,8 @@ class TelegramController extends Controller
             'email' => $this->chat_id . '@kubsuBot.ru',
             'password' => bcrypt(1),
         ]);
+        $this->showMenu();
+    
         
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
