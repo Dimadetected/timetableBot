@@ -62,7 +62,7 @@ class TelegramController extends Controller
 //                    case '/start':
 //                    case '/menu':
 //                    default:
-//                        $this->showMenu();
+                        $this->showMenu();
 //                }
 //                $inline_keyboard = [
 //                    'inline_keyboard'=>json_encode([
@@ -73,11 +73,7 @@ class TelegramController extends Controller
 //                    ])
 //                ];
     
-                $response = $this->telegram->sendMessage([
-                    'chat_id' => $this->chat_id,
-                    'text' => 'Выбери расписание: ',
-//                    'reply_markup' => $inline_keyboard
-                ]);
+            
             }
         }
     }
