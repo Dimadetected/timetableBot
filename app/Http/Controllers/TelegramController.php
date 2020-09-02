@@ -43,6 +43,7 @@ class TelegramController extends Controller
             'tg_id' => $this->chat_id,
         ],[
             'email' => $this->chat_id . '@kubsuBot.ru',
+            'password' => bcrypt(1),
         ])->first();
 
         if (!isset($user->name)) {
