@@ -134,6 +134,7 @@ class TemplateController extends Controller
             'group_id' => $request->group_id,
             'dayOfWeek' => $request->dayOfWeek,
             'type' => $type,
+            'online' => ($request->online !='null'?$request->online:1)
         ]);
         
         return redirect()->route($this->routes['index']);

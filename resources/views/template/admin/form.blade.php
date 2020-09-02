@@ -27,6 +27,13 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="form-group my-3">
+                        <label for="online">Тип: </label>
+                        <select name="online" id="online" class="form-control">
+                            <option value="null">Очно</option>
+                            <option value="1">Дистанционно</option>
+                        </select>
+                    </div>
                 </div>
                 @csrf
                 <div class="row mt-4 ">
