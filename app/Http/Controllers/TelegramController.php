@@ -18,7 +18,7 @@ class TelegramController extends Controller
 
     public function __construct()
     {
-        $this->telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+        $this->telegram = new Api(config('telegram.bots.mybot.token'));
     }
 
     public function getMe()
@@ -29,7 +29,7 @@ class TelegramController extends Controller
 
     public function setWebHook()
     {
-        $url = 'https://kubsu.4wr.ru/' . env('TELEGRAM_BOT_TOKEN') . '/webhook';
+        $url = 'https://kubsu.4wr.ru/' . config('telegram.bots.mybot.token') . '/webhook';
         $response = $this->telegram->setWebhook(['url' => $url]);
 
         return $response == TRUE ? $response : dd($response);
@@ -37,7 +37,6 @@ class TelegramController extends Controller
 
     public function handleRequest(Request $request)
     {
-
         $this->chat_id = $request['message']['chat']['id'];
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
