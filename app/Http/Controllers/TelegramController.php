@@ -146,7 +146,7 @@ class TelegramController extends Controller
     
     public function sendAll()
     {
-        $users = \App\User::query()->whereNotNull('group_id')->get();
+        $users = \App\User::query()->whereNotNull('group_id')->whereNotNull('tg_id')->get();
         foreach ($users as $user){
             $this->timetableSend(1,$user->tg_id);
         }
