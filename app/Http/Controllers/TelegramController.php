@@ -116,7 +116,7 @@ class TelegramController extends Controller
         }
     }
     
-    public function timetableSend($flag = 1, $tg_id = NULL)
+    public function timetableSend($flag = 1)
     {
         if ($flag == 1) {
             $startMessage = 'Расписание на сегодня:';
@@ -148,7 +148,8 @@ class TelegramController extends Controller
     {
         $users = \App\User::query()->whereNotNull('group_id')->whereNotNull('tg_id')->get();
         foreach ($users as $user){
-            $this->timetableSend(1,$user->tg_id);
+            $this->chat_id = $user->tg_id;
+            $this->timetableSend(1);
         }
     }
     
