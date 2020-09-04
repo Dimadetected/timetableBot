@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Timetable;
+use App\Telegram;
 use Carbon\Carbon;
 use http\Client\Curl\User;
 use Illuminate\Http\Request;
@@ -41,7 +42,7 @@ class TelegramController extends Controller
         $this->chat_id = $request['message']['chat']['id'];
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
-        
+    
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
         ], [
@@ -50,7 +51,7 @@ class TelegramController extends Controller
             'password' => bcrypt(1),
         ]);
         file_put_contents(public_path('request.json'), json_encode($request['message']));
-        $this->sendMessage(json_encode($request['callback_query']));
+        $this->sendMessage(json_encode($request['callback_query']['data']));
     
         
         $this->user = $user;
