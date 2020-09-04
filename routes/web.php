@@ -14,12 +14,12 @@ use \Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::post('/'.env('TELEGRAM_BOT_TOKEN') . '/webhook', 'TelegramController@handleRequest');
+Route::post('/' . config('telegram.bots.mybot.token') . '/webhook', 'TelegramController@handleRequest');
 
         Route::get('/tel', 'TelegramController@timetableSend')->name('timetableSend');
         Route::get('/test', 'TelegramController@test')->name('test');
 Route::prefix('admin')->name('admin.')->group(function () {
-    
+
     //Расписание
     Route::get('/', 'TimetableController@index')->name('index');
     Route::prefix('timetable')->name('timetable.')->group(function () {
@@ -33,7 +33,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/form/{id?}', 'UserController@form')->name('form');
         Route::post('/store/', 'UserController@store')->name('store');
     });
-    
+
     //Шаблоны
     Route::prefix('templates')->name('templates.')->group(function () {
         Route::get('/', 'TemplateController@index')->name('index');
@@ -41,14 +41,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/store/', 'TemplateController@store')->name('store');
         Route::any('/timetablesCreate/', 'TemplateController@timetablesCreate')->name('timetablesCreate');
     });
-    
+
     //Пары
     Route::prefix('lectures')->name('lectures.')->group(function () {
         Route::get('/', 'LectureController@index')->name('index');
         Route::get('/form/{id?}', 'LectureController@form')->name('form');
         Route::post('/store/', 'LectureController@store')->name('store');
     });
-    
+
     //Курсы
     Route::prefix('courses')->name('courses.')->group(function () {
         Route::get('/', 'CourseController@index')->name('index');
