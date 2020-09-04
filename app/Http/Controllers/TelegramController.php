@@ -15,26 +15,26 @@ class TelegramController extends Controller
     protected $username;
     protected $text;
     protected $user;
-
+    
     public function __construct()
     {
         $this->telegram = new Api(config('telegram.bots.mybot.token'));
     }
-
+    
     public function getMe()
     {
         $response = $this->telegram->getMe();
         return $response;
     }
-
+    
     public function setWebHook()
     {
         $url = 'https://kubsu.4wr.ru/' . config('telegram.bots.mybot.token') . '/webhook';
         $response = $this->telegram->setWebhook(['url' => $url]);
-
+        
         return $response == TRUE ? $response : dd($response);
     }
-
+    
     public function handleRequest(Request $request)
     {
         $this->chat_id = $request['message']['chat']['id'];
@@ -47,7 +47,9 @@ class TelegramController extends Controller
             'email' => $this->chat_id . '@kubsuBot.ru',
             'password' => bcrypt(1),
         ]);
-        file_put_contents(public_path('request.json'),json_encode($request['message']));
+        file_put_contents(public_path('request.json'), json_encode($request['message']));
+        if (isset($request['callback_query']))
+            file_put_contents(public_path('callback.json'), json_encode($request['callback_query']));
         $this->user = $user;
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
@@ -75,50 +77,59 @@ class TelegramController extends Controller
         }
         return 200;
     }
-
+    
     public function showMenu($info = NULL)
     {
         $message = '';
-
+        $inline_button0 = ["text" => "0", "callback_data" => "/today"];
+        $inline_button1 = ["text" => "1", "callback_data" => '/tomorrow'];
+        $inline_keyboard = [[$inline_button0, $inline_button1]];
+        
+        $keyboard1 = ["inline_keyboard" => $inline_keyboard];
+        $replyMarkup1 = json_encode($keyboard1);
         $message .= '/today' . chr(10);
         $message .= '/tomorrow' . chr(10);
-
-        $this->sendMessage($message);
+        $this->telegram->sendMessage([
+            'chat_id' => $this->chat_id,
+            'text' => $message,
+            'reply_markup' => $replyMarkup1,
+        ]);
+//        $this->sendMessage($message);
     }
-
+    
     public function newUser()
     {
         $message = 'Привет. Скоро твой аккаунт подтвердят и ты будешь получать расписание!';
-
+        
         $this->sendMessage($message);
     }
-
+    
     protected function sendMessage($message, $parse_html = FALSE)
     {
-        try{
+        try {
             $data = [
                 'chat_id' => $this->chat_id,
                 'text' => $message,
             ];
-    
+            
             if ($parse_html) $data['parse_mode'] = 'HTML';
-    
+            
             $this->telegram->sendMessage($data);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->telegram->sendMessage([
                 'chat_id' => '541726137',
-                'text' => $e->getMessage()
+                'text' => $e->getMessage(),
             ]);
             
         }
     }
-
+    
     public function timetableSend($flag = FALSE)
     {
         if ($flag == 1) {
             $startMessage = 'Расписание на сегодня:';
             $date = Carbon::parse(\request('date', now()));
-        } else{
+        } else {
             $startMessage = 'Расписание на завтра:';
             $date = Carbon::parse(\request('date', now()->addDay()));
         }
