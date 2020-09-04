@@ -50,6 +50,7 @@ class TelegramController extends Controller
         ]);
         file_put_contents(public_path('request.json'), json_encode($request['message']));
             file_put_contents(public_path('callback.json'), json_encode($this->telegram->getWebhookUpdate()));
+            $this->sendMessage(json_encode($this->telegram->getWebhookUpdate()));
         $this->user = $user;
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
