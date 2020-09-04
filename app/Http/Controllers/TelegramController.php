@@ -40,7 +40,7 @@ class TelegramController extends Controller
         $this->chat_id = $request['message']['chat']['id'];
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
-        
+        $updates = $this->telegram->getWebhookUpdate();
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
         ], [
@@ -49,8 +49,14 @@ class TelegramController extends Controller
             'password' => bcrypt(1),
         ]);
         file_put_contents(public_path('request.json'), json_encode($request['message']));
-            file_put_contents(public_path('callback.json'), json_encode($this->telegram->getWebhookUpdate()));
-            $this->sendMessage(json_encode($this->telegram->getWebhookUpdate()));
+    
+        $inline_id = $updates["callback_query"]["message"]["chat"]["id"];
+        $data = $updates["callback_query"]["data"];
+    
+        if (isset($data)) {
+            $this->telegram->sendMessage([ 'chat_id' => $inline_id, 'text' => "Test" ]);
+        }
+        
         $this->user = $user;
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
