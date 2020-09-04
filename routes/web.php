@@ -17,6 +17,7 @@ use \Illuminate\Support\Facades\Auth;
 Route::post('/' . config('telegram.bots.mybot.token') . '/webhook', 'TelegramController@handleRequest');
 
 Route::get('/tel', 'TelegramController@timetableSend')->name('timetableSend');
+Route::get('/sendAll', 'TelegramController@sendAll')->name('sendAll');
 Route::prefix('admin')->name('admin.')->group(function () {
     
     //Расписание

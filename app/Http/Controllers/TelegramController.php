@@ -42,7 +42,7 @@ class TelegramController extends Controller
         $this->chat_id = $request['message']['chat']['id'];
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
-    
+        
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
         ], [
@@ -85,7 +85,7 @@ class TelegramController extends Controller
         $message = '';
         $message .= '/today' . chr(10);
         $message .= '/tomorrow' . chr(10);
-
+        
         $this->sendMessage($message);
     }
     
@@ -116,7 +116,7 @@ class TelegramController extends Controller
         }
     }
     
-    public function timetableSend($flag = FALSE)
+    public function timetableSend($flag = 1, $tg_id = NULL)
     {
         if ($flag == 1) {
             $startMessage = 'Расписание на сегодня:';
@@ -137,7 +137,19 @@ class TelegramController extends Controller
         foreach ($timetable->timetable as $times => $arr)
             if (isset($arr[$type]))
                 $message .= $arr[$type]['time'] . ' | ' . $arr[$type]['lecture'] . ' | ' . $arr[$type]['teacher'] . PHP_EOL;
-        $this->sendMessage($startMessage . ' ' . PHP_EOL . $message);
+        $this->telegram->sendMessage([
+                'chat_id' => $tg_id ?? $this->chat_id,
+                'text' => $startMessage . ' ' . PHP_EOL . $message,
+            ]
+        );
+    }
+    
+    public function sendAll()
+    {
+        $users = \App\User::query()->whereNotNull('group_id')->get();
+        foreach ($users as $user){
+            $this->timetableSend(1,$user->tg_id);
+        }
     }
     
 }
