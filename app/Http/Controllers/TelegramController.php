@@ -84,7 +84,7 @@ class TelegramController extends Controller
 
             }
         }
-        return 'ok';
+        return 200;
     }
 
     public function showMenu($info = NULL)
