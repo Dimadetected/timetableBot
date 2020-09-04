@@ -64,6 +64,9 @@ class TelegramController extends Controller
             if (is_null($user->group_id)) {
                 $this->newUser();
             } else {
+                if(stristr($this->text,'спасибо')){
+                    $this->sendMessage('Рад помочь!');
+                }
                 switch ($this->text) {
                     case '/today':
                         $this->timetableSend(1);
@@ -75,9 +78,7 @@ class TelegramController extends Controller
                         $this->showMenu();
                         break;
                 }
-                if(stristr($this->text,'спасибо')){
-                    $this->sendMessage('Рад помочь!');
-                }
+
             }
         }
         return 200;
