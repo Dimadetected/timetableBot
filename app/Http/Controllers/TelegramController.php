@@ -42,7 +42,7 @@ class TelegramController extends Controller
         $this->text = $request['message']['text'];
         $this->telegram->sendMessage([
             'chat_id' => '541726137',
-            'text' => '123'
+            'text' => '1'
         ]);
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
@@ -51,9 +51,15 @@ class TelegramController extends Controller
             'email' => $this->chat_id . '@kubsuBot.ru',
             'password' => bcrypt(1),
         ]);
-
+        $this->telegram->sendMessage([
+            'chat_id' => '541726137',
+            'text' => '2'
+        ]);
         $this->user = $user;
-
+        $this->telegram->sendMessage([
+            'chat_id' => '541726137',
+            'text' => '3'
+        ]);
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
                 $this->sendMessage('Введи ФИО');
