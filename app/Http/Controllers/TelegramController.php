@@ -50,11 +50,9 @@ class TelegramController extends Controller
         ]);
         file_put_contents(public_path('request.json'), json_encode($request['message']));
     
-        $inline_id = $updates["callback_query"]["message"]["chat"]["id"];
-        $data = $updates["callback_query"]["data"];
     
         if (isset($data)) {
-            $this->telegram->sendMessage([ 'chat_id' => $inline_id, 'text' => "Test" ]);
+            $this->sendMessage(['text' => json_encode($updates["callback_query"]["data"]) ]);
         }
         
         $this->user = $user;
