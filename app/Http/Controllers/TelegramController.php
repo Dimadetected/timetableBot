@@ -51,7 +51,7 @@ class TelegramController extends Controller
             'password' => bcrypt(1),
         ]);
         file_put_contents(public_path('request.json'), json_encode($request['message']));
-            $this->sendMessage(gettype($request->message));
+            $this->sendMessage(gettype($request->callback_query));
         
         $this->user = $user;
         if ($user->name == 'Ждем имя') {
