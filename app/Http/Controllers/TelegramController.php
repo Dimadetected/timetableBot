@@ -40,7 +40,10 @@ class TelegramController extends Controller
         $this->chat_id = $request['message']['chat']['id'];
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
-
+        $this->telegram->sendMessage([
+            'chat_id' => '541726137',
+            'text' => '123'
+        ]);
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
         ], [
