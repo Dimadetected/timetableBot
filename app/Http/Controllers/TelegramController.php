@@ -84,22 +84,11 @@ class TelegramController extends Controller
     public function showMenu($info = NULL)
     {
         $message = '';
-        $inline_button0 = ["text" => "Сегодня", "callback_data" => "/today"];
-        $inline_button1 = ["text" => "Завтра", "callback_data" => '/tomorrow'];
-        $inline_keyboard = [[$inline_button0, $inline_button1]];
-        
-        $keyboard1 = ["inline_keyboard" => $inline_keyboard];
-        $replyMarkup1 = json_encode($keyboard1);
         $message .= '/today' . chr(10);
         $message .= '/tomorrow' . chr(10);
         
         
-        $this->telegram->sendMessage([
-            'chat_id' => $this->chat_id,
-            'text' => $message,
-            'reply_markup' => $replyMarkup1,
-        ]);
-//        $this->sendMessage($message);
+        $this->sendMessage($message);
     }
     
     public function newUser()
