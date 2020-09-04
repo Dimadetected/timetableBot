@@ -51,9 +51,7 @@ class TelegramController extends Controller
         file_put_contents(public_path('request.json'), json_encode($request['message']));
     
     
-        if (isset($data)) {
             $this->sendMessage(['text' => json_encode($updates["callback_query"]["data"]) ]);
-        }
         
         $this->user = $user;
         if ($user->name == 'Ждем имя') {
