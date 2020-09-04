@@ -40,10 +40,6 @@ class TelegramController extends Controller
         $this->chat_id = $request['message']['chat']['id'];
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
-        $this->telegram->sendMessage([
-            'chat_id' => '541726137',
-            'text' => '1'
-        ]);
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
         ], [
@@ -51,15 +47,7 @@ class TelegramController extends Controller
             'email' => $this->chat_id . '@kubsuBot.ru',
             'password' => bcrypt(1),
         ]);
-        $this->telegram->sendMessage([
-            'chat_id' => '541726137',
-            'text' => '2'
-        ]);
         $this->user = $user;
-        $this->telegram->sendMessage([
-            'chat_id' => '541726137',
-            'text' => '3'
-        ]);
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
                 $this->sendMessage('Введи ФИО');
@@ -68,37 +56,17 @@ class TelegramController extends Controller
                 $user->update(['name' => $this->text]);
             }
         } else {
-            $this->telegram->sendMessage([
-                'chat_id' => '541726137',
-                'text' => '4'
-            ]);
             if (is_null($user->group_id)) {
                 $this->newUser();
             } else {
-                $this->telegram->sendMessage([
-                    'chat_id' => '541726137',
-                    'text' => $this->text
-                ]);
                 switch ($this->text) {
                     case '/today':
-                        $this->telegram->sendMessage([
-                            'chat_id' => '541726137',
-                            'text' => 't1'
-                        ]);
                         $this->timetableSend(1);
                         break;
                     case '/tomorrow':
-                        $this->telegram->sendMessage([
-                            'chat_id' => '541726137',
-                            'text' => 't2'
-                        ]);
                         $this->timetableSend(2);
                         break;
                     default:
-                        $this->telegram->sendMessage([
-                            'chat_id' => '541726137',
-                            'text' => 'menu'
-                        ]);
                         $this->showMenu();
                         break;
                 }
@@ -154,10 +122,6 @@ class TelegramController extends Controller
 
     public function timetableSend($flag = FALSE)
     {
-        $this->telegram->sendMessage([
-            'chat_id' => '541726137',
-            'text' => 't2In'
-        ]);
         if ($flag == 1) {
             $startMessage = 'Расписание на сегодня:';
             $date = Carbon::parse(\request('date', now()));
@@ -165,34 +129,18 @@ class TelegramController extends Controller
             $startMessage = 'Расписание на завтра:';
             $date = Carbon::parse(\request('date', now()->addDay()));
         }
-        $this->telegram->sendMessage([
-            'chat_id' => '541726137',
-            'text' => 't2In2'
-        ]);
         $timetable = Timetable::query()
             ->where('date', 'LIKE', '%' . $date->toDateString() . '%')
 //            ->where('group_id', $this->user->group_id)
             ->where('group_id', 1)
             ->first();
-        $this->telegram->sendMessage([
-            'chat_id' => '541726137',
-            'text' => 't2In3'
-        ]);
         $message = '';
         $type = 'c';
         if ($date->weekOfYear % 2 == 0)
             $type = 'z';
-        $this->telegram->sendMessage([
-            'chat_id' => '541726137',
-            'text' => 't2In4'
-        ]);
         foreach ($timetable->timetable as $times => $arr)
             if (isset($arr[$type]))
                 $message .= $arr[$type]['time'] . ' | ' . $arr[$type]['lecture'] . ' | ' . $arr[$type]['teacher'] . PHP_EOL;
-        $this->telegram->sendMessage([
-            'chat_id' => '541726137',
-            'text' => 't2In5'
-        ]);
         $this->sendMessage($startMessage . ' ' . PHP_EOL . $message);
     }
     
