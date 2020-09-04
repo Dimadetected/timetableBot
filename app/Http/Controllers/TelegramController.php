@@ -81,19 +81,36 @@ class TelegramController extends Controller
                 ]);
                 switch ($this->text) {
                     case '/today':
+                        $this->telegram->sendMessage([
+                            'chat_id' => '541726137',
+                            'text' => 't1'
+                        ]);
                         $this->timetableSend(1);
                         break;
                     case '/tomorrow':
                         $this->timetableSend(2);
+                        $this->telegram->sendMessage([
+                            'chat_id' => '541726137',
+                            'text' => 't2'
+                        ]);
                         break;
                     default:
+                        $this->telegram->sendMessage([
+                            'chat_id' => '541726137',
+                            'text' => 'menu'
+                        ]);
                         $this->showMenu();
+                        break;
                 }
                 $this->telegram->sendMessage([
                     'chat_id' => '541726137',
                     'text' => '5'
                 ]);
             }
+            $this->telegram->sendMessage([
+                'chat_id' => '541726137',
+                'text' => '6'
+            ]);
         }
         return 200;
     }
