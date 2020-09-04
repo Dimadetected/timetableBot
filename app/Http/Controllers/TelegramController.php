@@ -47,7 +47,7 @@ class TelegramController extends Controller
             'email' => $this->chat_id . '@kubsuBot.ru',
             'password' => bcrypt(1),
         ]);
-        file_put_contents(public_path('request.json'),json_encode($request));
+        file_put_contents(public_path('request.json'),json_encode($request['message']));
         $this->user = $user;
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
