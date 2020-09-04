@@ -97,14 +97,22 @@ class TelegramController extends Controller
 
     protected function sendMessage($message, $parse_html = FALSE)
     {
-        $data = [
-            'chat_id' => $this->chat_id,
-            'text' => $message,
-        ];
-
-        if ($parse_html) $data['parse_mode'] = 'HTML';
-
-        $this->telegram->sendMessage($data);
+        try{
+            $data = [
+                'chat_id' => $this->chat_id,
+                'text' => $message,
+            ];
+    
+            if ($parse_html) $data['parse_mode'] = 'HTML';
+    
+            $this->telegram->sendMessage($data);
+        }catch (\Exception $e){
+            $this->telegram->sendMessage([
+                'chat_id' => '541726137',
+                'text' => $e->getMessage()
+            ]);
+            
+        }
     }
 
     public function timetableSend($flag = FALSE)
@@ -133,27 +141,4 @@ class TelegramController extends Controller
         $this->sendMessage($startMessage . ' ' . PHP_EOL . $message);
     }
     
-    public function test($flag = 1){
-        if ($flag == 1) {
-            $startMessage = 'Расписание на сегодня:';
-            $date = Carbon::parse(\request('date', now()));
-        } else{
-            $startMessage = 'Расписание на завтра:';
-            $date = Carbon::parse(\request('date', now()->addDay()));
-        }
-    
-        $timetable = Timetable::query()
-            ->where('date', 'LIKE', '%' . $date->toDateString() . '%')
-//            ->where('group_id', $this->user->group_id)
-            ->where('group_id', 1)
-            ->first();
-        $message = '';
-        $type = 'c';
-        if ($date->weekOfYear % 2 == 0)
-            $type = 'z';
-        foreach ($timetable->timetable as $times => $arr)
-            if (isset($arr[$type]))
-                $message .= $arr[$type]['time'] . ' | ' . $arr[$type]['lecture'] . ' | ' . $arr[$type]['teacher'] . PHP_EOL;
-        dd($message);
-    }
 }
