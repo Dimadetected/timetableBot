@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Telegram\Bot\Api;
+use Telegram\Bot\Keyboard\Keyboard;
 
 class TelegramController extends Controller
 {
@@ -49,7 +50,7 @@ class TelegramController extends Controller
             'password' => bcrypt(1),
         ]);
         file_put_contents(public_path('request.json'), json_encode($request['message']));
-        $this->sendMessage(json_encode($request['InlineQueryResult']));
+        $this->sendMessage(json_encode($request['callback_query']));
     
         
         $this->user = $user;
@@ -91,10 +92,16 @@ class TelegramController extends Controller
         $replyMarkup1 = json_encode($keyboard1);
         $message .= '/today' . chr(10);
         $message .= '/tomorrow' . chr(10);
+        
+        $inline_keyboard = Keyboard::make()
+            ->inline()
+            ->row(Keyboard::inlineButton(["text" => "Сегодня", 'callback_data' =>'/today']))
+            ->row(Keyboard::inlineButton(["text" => "Завтра", 'callback_data' =>'/tomorrow']));
+        
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => $message,
-            'reply_markup' => $replyMarkup1,
+            'reply_markup' => $inline_keyboard,
         ]);
 //        $this->sendMessage($message);
     }
