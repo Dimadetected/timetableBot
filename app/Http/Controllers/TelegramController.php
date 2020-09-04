@@ -85,8 +85,7 @@ class TelegramController extends Controller
         $message = '';
         $message .= '/today' . chr(10);
         $message .= '/tomorrow' . chr(10);
-        
-        
+
         $this->sendMessage($message);
     }
     
