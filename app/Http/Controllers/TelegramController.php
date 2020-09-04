@@ -70,15 +70,7 @@ class TelegramController extends Controller
                         $this->showMenu();
                         break;
                 }
-                $this->telegram->sendMessage([
-                    'chat_id' => '541726137',
-                    'text' => '5'
-                ]);
             }
-            $this->telegram->sendMessage([
-                'chat_id' => '541726137',
-                'text' => '6'
-            ]);
         }
         return 200;
     }
