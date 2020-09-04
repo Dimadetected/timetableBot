@@ -75,6 +75,9 @@ class TelegramController extends Controller
                         $this->showMenu();
                         break;
                 }
+                if(stristr($this->text,'спасибо')){
+                    $this->sendMessage('Рад помочь!');
+                }
             }
         }
         return 200;
