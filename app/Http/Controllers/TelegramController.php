@@ -68,9 +68,17 @@ class TelegramController extends Controller
                 $user->update(['name' => $this->text]);
             }
         } else {
+            $this->telegram->sendMessage([
+                'chat_id' => '541726137',
+                'text' => '4'
+            ]);
             if (is_null($user->group_id)) {
                 $this->newUser();
             } else {
+                $this->telegram->sendMessage([
+                    'chat_id' => '541726137',
+                    'text' => $this->text
+                ]);
                 switch ($this->text) {
                     case '/today':
                         $this->timetableSend(1);
@@ -81,7 +89,10 @@ class TelegramController extends Controller
                     default:
                         $this->showMenu();
                 }
-
+                $this->telegram->sendMessage([
+                    'chat_id' => '541726137',
+                    'text' => '5'
+                ]);
             }
         }
         return 200;
