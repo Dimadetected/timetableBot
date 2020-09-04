@@ -88,11 +88,11 @@ class TelegramController extends Controller
                         $this->timetableSend(1);
                         break;
                     case '/tomorrow':
-                        $this->timetableSend(2);
                         $this->telegram->sendMessage([
                             'chat_id' => '541726137',
                             'text' => 't2'
                         ]);
+                        $this->timetableSend(2);
                         break;
                     default:
                         $this->telegram->sendMessage([
