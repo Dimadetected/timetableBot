@@ -108,7 +108,7 @@ class TelegramController extends Controller
         $message = '';
         $message .= '/today' . chr(10);
         $message .= '/tomorrow' . chr(10);
-        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: '. PHP_EOL.'/date ' . now()->format('d.m.Y') . chr(10);
+//        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: '. PHP_EOL.'/date ' . now()->format('d.m.Y') . chr(10);
         
         $this->sendMessage($message);
     }
