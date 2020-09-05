@@ -61,7 +61,7 @@ class TimetableNoticeStart implements ShouldQueue
             $telegram->sendMessage([
                         'chat_id' => $user->tg_id,
                         'text' => $startMessage . ' ' . $message,
-                    ];
+                    ]);
         }
 
     }
