@@ -42,6 +42,7 @@ class TimetableNoticeStart implements ShouldQueue
         $startMessage = 'Расписание на сегодня:';
         $date = Carbon::parse(\request('date', now()));
         $users = User::query()->whereNotNull('tg_id')->whereNotNull('group_id')->get();
+        dd($users);
         foreach ($users as $user) {
 
             $timetable = Timetable::query()
