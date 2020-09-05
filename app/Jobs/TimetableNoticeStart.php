@@ -42,7 +42,6 @@ class TimetableNoticeStart implements ShouldQueue
         $startMessage = 'Расписание на сегодня:';
         $date = Carbon::parse(\request('date', now()));
         $users = User::query()->whereNotNull('tg_id')->whereNotNull('group_id')->get();
-        dd($users);
         foreach ($users as $user) {
 
             $timetable = Timetable::query()
@@ -61,11 +60,15 @@ class TimetableNoticeStart implements ShouldQueue
                 $message = 'Выходной';
             }
 
-            self::$telegram->sendMessage([
-                    'chat_id' => $user->tg_id,
-                    'text' => $startMessage . ' ' . $message,
-                ]
-            );
+            try{
+                self::$telegram->sendMessage([
+                        'chat_id' => $user->tg_id,
+                        'text' => $startMessage . ' ' . $message,
+                    ]
+                );
+            }catch (\Exception $e){
+                dump($e->getMessage());
+            }
         }
 
     }
