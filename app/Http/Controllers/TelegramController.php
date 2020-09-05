@@ -64,7 +64,7 @@ class TelegramController extends Controller
             if (is_null($user->group_id)) {
                 $this->newUser();
             } else {
-                if(stristr($this->text,'спасибо')){
+                if (stristr($this->text, 'спасибо')) {
                     $this->sendMessage('Рад помочь!');
                 }
                 switch ($this->text) {
@@ -134,16 +134,21 @@ class TelegramController extends Controller
 //            ->where('group_id', $this->user->group_id)
             ->where('group_id', 1)
             ->first();
-        $message = '';
-        $type = 'c';
-        if ($date->weekOfYear % 2 == 0)
-            $type = 'z';
-        foreach ($timetable->timetable as $times => $arr)
-            if (isset($arr[$type]))
-                $message .= $arr[$type]['time'] . ' | ' . $arr[$type]['lecture'] . ' | ' . $arr[$type]['teacher'] . PHP_EOL;
+        if (isset($timetable->id)) {
+            $message = PHP_EOL . '';
+            $type = 'c';
+            if ($date->weekOfYear % 2 == 0)
+                $type = 'z';
+            foreach ($timetable->timetable as $times => $arr)
+                if (isset($arr[$type]))
+                    $message .= $arr[$type]['time'] . ' | ' . $arr[$type]['lecture'] . ' | ' . $arr[$type]['teacher'] . PHP_EOL;
+        } else {
+            $message = 'Выходной';
+        }
+
         $this->telegram->sendMessage([
                 'chat_id' => $tg_id ?? $this->chat_id,
-                'text' => $startMessage . ' ' . PHP_EOL . $message,
+                'text' => $startMessage . ' ' . $message,
             ]
         );
     }
@@ -151,7 +156,7 @@ class TelegramController extends Controller
     public function sendAll()
     {
         $users = \App\User::query()->whereNotNull('group_id')->whereNotNull('tg_id')->get();
-        foreach ($users as $user){
+        foreach ($users as $user) {
             $this->chat_id = $user->tg_id;
             $this->timetableSend(2);
         }
