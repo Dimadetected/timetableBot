@@ -19,7 +19,10 @@ Route::post('/' . config('telegram.bots.mybot.token') . '/webhook', 'TelegramCon
 Route::get('/tel', 'TelegramController@timetableSend')->name('timetableSend');
 Route::get('/sendAll', 'TelegramController@sendAll')->name('sendAll');
 Route::prefix('admin')->name('admin.')->group(function () {
-    
+
+Route::get('/start', 'TelegramController@start')->name('start');
+Route::get('/end', 'TelegramController@end')->name('end');
+Route::get('/create', 'TelegramController@create')->name('create');
     //Расписание
     Route::get('/', 'TimetableController@index')->name('index');
     Route::prefix('timetable')->name('timetable.')->group(function () {
@@ -33,7 +36,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/form/{id?}', 'UserController@form')->name('form');
         Route::post('/store/', 'UserController@store')->name('store');
     });
-    
+
     //Шаблоны
     Route::prefix('templates')->name('templates.')->group(function () {
         Route::get('/', 'TemplateController@index')->name('index');
@@ -41,28 +44,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/store/', 'TemplateController@store')->name('store');
         Route::any('/timetablesCreate/', 'TemplateController@timetablesCreate')->name('timetablesCreate');
     });
-    
+
     //Пары
     Route::prefix('lectures')->name('lectures.')->group(function () {
         Route::get('/', 'LectureController@index')->name('index');
         Route::get('/form/{id?}', 'LectureController@form')->name('form');
         Route::post('/store/', 'LectureController@store')->name('store');
     });
-    
+
     //Курсы
     Route::prefix('courses')->name('courses.')->group(function () {
         Route::get('/', 'CourseController@index')->name('index');
         Route::get('/form/{id?}', 'CourseController@form')->name('form');
         Route::post('/store/', 'CourseController@store')->name('store');
     });
-    
+
     //Факультеты
     Route::prefix('faculties')->name('faculties.')->group(function () {
         Route::get('/', 'FacultyController@index')->name('index');
         Route::get('/form/{id?}', 'FacultyController@form')->name('form');
         Route::post('/store/', 'FacultyController@store')->name('store');
     });
-    
+
     //Группы
     Route::prefix('groups')->name('groups.')->group(function () {
         Route::get('/', 'GroupController@index')->name('index');
