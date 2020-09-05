@@ -27,24 +27,26 @@ class TimetableController extends Controller
         'form' => 'admin.timetable.form',
         'store' => 'admin.timetable.store',
     ];
-    
+
     private $teacherTypeId = 2;
-    
+
     public function index()
     {
-        $items = Timetable::query()->get();
+        abort_if(!auth()->check(),403,'Доступ запрещен');
+        $user= auth()->user();
+        $items = Timetable::query()->where('group_id',$user->group_id)->orderBy('date','asc')->get();
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));
     }
-    
+
     public function form($id = FALSE)
     {
         $item = new Timetable();
         if ($id)
             $item = Timetable::query()->find($id);
-        
+
         $usersType = UsersType::query()->find($this->teacherTypeId);
-        
+
         $daysOfWeek = [
             1 => 'Понедельник',
             2 => 'Вторник',
@@ -54,7 +56,7 @@ class TimetableController extends Controller
             6 => 'Суббота',
             0 => 'Воскресенье',
         ];
-        
+
         $timesLectures = [
             1 => [
                 'start' => '08:00',
@@ -85,22 +87,22 @@ class TimetableController extends Controller
                 'end' => '19:50',
             ],
         ];
-        
+
         $teachers = User::query()->where('users_type_id', $usersType->id)->get();
         $groups = Group::query()->get();
         $faculties = Faculty::query()->get();
         $courses = Course::query()->get();
         $lectures = Lecture::query()->get();
-        
+
         Carbon::setLocale('ru');
         $routes = $this->routes;
         return view($this->views['form'], compact('item', 'routes', 'teachers', 'faculties', 'groups', 'courses', 'daysOfWeek', 'lectures', 'timesLectures'));
     }
-    
+
     public function store(TimetableFormRequest $request)
     {
         $id = $request->id;
-        
+
         $type = [
             'c' => [
                 'times' => [],
@@ -120,7 +122,7 @@ class TimetableController extends Controller
                 $type['c']['teachers'][] = $request->teacher_id_c[$i];
             if ($request->lecture_id_c[$i] != 'null')
                 $type['c']['lectures'][] = $request->lecture_id_c[$i];
-            
+
             if ($request->times_z[$i] != 'null')
                 $type['z']['times'][] = $request->times_z[$i];
             if ($request->teacher_id_z[$i] != 'null')
@@ -136,10 +138,10 @@ class TimetableController extends Controller
             'type' => $type,
             'online' => ($request->online !='null'?$request->online:1)
         ]);
-        
+
         return redirect()->route($this->routes['index']);
     }
-    
-    
-    
+
+
+
 }
