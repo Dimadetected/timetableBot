@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\TimetableCreate;
+use App\Jobs\TimetableNoticeEnd;
+use App\Jobs\TimetableNoticeStart;
 use App\Models\Timetable;
 use App\Telegram;
 use Carbon\Carbon;
@@ -161,6 +164,16 @@ class TelegramController extends Controller
             $this->chat_id = $user->tg_id;
             $this->timetableSend(\request('flag',1));
         }
+    }
+
+    public function start(){
+        TimetableNoticeStart::handle();
+    }
+    public function end(){
+        TimetableNoticeEnd::handle();
+    }
+    public function create(){
+        TimetableCreate::handle();
     }
 
 }
