@@ -83,9 +83,7 @@ class TelegramController extends Controller
                 if (stristr($this->text, '/date')) {
                     $date = explode(' ', $this->text);
                     if (isset($date[1])) {
-                        $this->sendMessage($date[1]);
-                        $date = Carbon::parse($date[1]);
-//                        $this->timetableSend($date);
+                        $this->timetableSend($date[1]);
                     }
                 }
                 switch ($this->text) {
@@ -140,22 +138,23 @@ class TelegramController extends Controller
         }
     }
     
-    public function timetableSend($flag = 1)
+    public function timetableSend($flag)
     {
-        if ($flag == 1) {
+        if ($flag === 1) {
             $startMessage = 'Расписание на сегодня:';
             $date = Carbon::parse(\request('date', now()));
-        } elseif ($flag == 2) {
+        } elseif ($flag === 2) {
             $startMessage = 'Расписание на завтра:';
             $date = Carbon::parse(\request('date', now()->addDay()));
         } else {
             $date = Carbon::parse($flag);
-            $startMessage = 'Расписание на ' . $this->weekDay[$date->dayOfWeek] . ' ' . $date->copy()->format('d.m.Y');
+            $startMessage = 'Расписание на '
+//                . $this->weekDay[$date->dayOfWeek] . ' ' .
+              .  $date->copy()->format('d.m.Y');
         }
         $timetable = Timetable::query()
             ->where('date', 'LIKE', '%' . $date->toDateString() . '%')
-//            ->where('group_id', $this->user->group_id)
-            ->where('group_id', 1)
+            ->where('group_id', $this->user->group_id)
             ->first();
         if (isset($timetable->id)) {
             $message = PHP_EOL . '';
