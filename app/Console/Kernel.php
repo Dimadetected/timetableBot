@@ -28,15 +28,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
+            TimetableNoticeEnd::handle();
+        })->dailyAt('19:48');
+        $schedule->call(function () {
             TimetableNoticeStart::handle();
         })->dailyAt('08:00');
         $schedule->call(function () {
-            TimetableNoticeEnd::handle();
-        })->dailyAt('19:34');
-        $schedule->call(function () {
             TimetableCreate::handle();
         })->hourly();
-        // $schedule->command('inspire')->hourly();
     }
 
     /**
