@@ -45,7 +45,6 @@ class TimetableCreate implements ShouldQueue
                     ], [
                         'type' => $template->type,
                     ]);
-                    break;
                 }
             }
         }
