@@ -149,7 +149,7 @@ class TelegramController extends Controller
         } else {
             $date = Carbon::parse($flag);
             $startMessage = 'Расписание на '
-//                . $this->weekDay[$date->dayOfWeek] . ' ' .
+                . $this->weekDay[$date->dayOfWeek] . ' '
               .  $date->copy()->format('d.m.Y');
         }
         $timetable = Timetable::query()
