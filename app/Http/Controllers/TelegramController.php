@@ -76,11 +76,11 @@ class TelegramController extends Controller
             if (is_null($user->group_id)) {
                 $this->newUser();
             } else {
-                if (strpos($this->text, 'спасибо')) {
+                if (stristr($this->text, 'спасибо')) {
                     $this->sendMessage('Рад помочь!');
                 }
                 
-                if (strpos($this->text, '/date')) {
+                if (stristr($this->text, '/date')) {
                     $date = explode(' ', $this->text);
                     if (isset($date[1])) {
                         $date = Carbon::parse($date[1]);
