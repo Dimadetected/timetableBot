@@ -32,7 +32,7 @@ class TimetableCreate implements ShouldQueue
      */
     public static function handle()
     {
-        $period = CarbonPeriod::create(now(), now()->addWeek());
+        $period = CarbonPeriod::create(now(), now()->addMonths(3));
         $templates = Template::query()->get();
 
         foreach ($templates as $template) {
