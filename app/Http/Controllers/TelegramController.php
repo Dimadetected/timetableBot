@@ -76,7 +76,7 @@ class TelegramController extends Controller
             if (is_null($user->group_id)) {
                 $this->newUser();
             } else {
-                if (stristr($this->text, 'спасибо')) {
+                if (stristr(strtolower($this->text), 'спасибо')) {
                     $this->sendMessage('Рад помочь!');
                 }
                 
