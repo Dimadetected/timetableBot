@@ -28,8 +28,6 @@ class TimetableNoticeStart implements ShouldQueue
      */
     public function __construct()
     {
-        self::$telegram = new Api(config('telegram.bots.mybot.token'));
-
     }
 
     /**
@@ -59,16 +57,11 @@ class TimetableNoticeStart implements ShouldQueue
             } else {
                 $message = 'Выходной';
             }
-
-            try{
-                self::$telegram->sendMessage([
+            $telegram = new Api(config('telegram.bots.mybot.token'));
+            $telegram->sendMessage([
                         'chat_id' => $user->tg_id,
                         'text' => $startMessage . ' ' . $message,
-                    ]
-                );
-            }catch (\Exception $e){
-                dump($e->getMessage());
-            }
+                    ];
         }
 
     }
