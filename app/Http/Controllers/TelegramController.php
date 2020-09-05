@@ -83,7 +83,7 @@ class TelegramController extends Controller
                 if (stristr($this->text, '/date')) {
                     $date = explode(' ', $this->text);
                     if (isset($date[1])) {
-                        $this->sendMessage(json_encode($date));
+                        $this->sendMessage($date[1]);
                         $date = Carbon::parse($date[1]);
 //                        $this->timetableSend($date);
                     }
