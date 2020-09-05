@@ -20,32 +20,41 @@ class TelegramController extends Controller
     protected $username;
     protected $text;
     protected $user;
-
+    protected $weekDay = [
+        '1' => 'понедельник',
+        '2' => 'вторник',
+        '3' => 'среда',
+        '4' => 'четверг',
+        '5' => 'пятница',
+        '6' => 'суббота',
+        '0' => 'воскресенье',
+    ];
+    
     public function __construct()
     {
         $this->telegram = new Api(config('telegram.bots.mybot.token'));
     }
-
+    
     public function getMe()
     {
         $response = $this->telegram->getMe();
         return $response;
     }
-
+    
     public function setWebHook()
     {
         $url = 'https://kubsu.4wr.ru/' . config('telegram.bots.mybot.token') . '/webhook';
         $response = $this->telegram->setWebhook(['url' => $url]);
-
+        
         return $response == TRUE ? $response : dd($response);
     }
-
+    
     public function handleRequest(Request $request)
     {
         $this->chat_id = $request['message']['chat']['id'];
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
-
+        
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
         ], [
@@ -54,7 +63,7 @@ class TelegramController extends Controller
             'password' => bcrypt(1),
         ]);
         file_put_contents(public_path('request.json'), json_encode($request['message']));
-
+        
         $this->user = $user;
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
@@ -67,8 +76,16 @@ class TelegramController extends Controller
             if (is_null($user->group_id)) {
                 $this->newUser();
             } else {
-                if (stristr($this->text, 'спасибо')) {
+                if (strpos($this->text, 'спасибо')) {
                     $this->sendMessage('Рад помочь!');
+                }
+                
+                if (strpos($this->text, '/date')) {
+                    $date = explode(' ', $this->text);
+                    if (isset($date[1])) {
+                        $date = Carbon::parse($date[1]);
+                        $this->timetableSend($date);
+                    }
                 }
                 switch ($this->text) {
                     case '/today':
@@ -77,32 +94,31 @@ class TelegramController extends Controller
                     case '/tomorrow':
                         $this->timetableSend(2);
                         break;
-                    default:
-                        $this->showMenu();
-                        break;
                 }
-
+                $this->showMenu();
+                
             }
         }
         return 200;
     }
-
+    
     public function showMenu($info = NULL)
     {
         $message = '';
         $message .= '/today' . chr(10);
         $message .= '/tomorrow' . chr(10);
-
+        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: '. PHP_EOL.'/date ' . now()->format('d.m.Y') . chr(10);
+        
         $this->sendMessage($message);
     }
-
+    
     public function newUser()
     {
         $message = 'Привет. Скоро твой аккаунт подтвердят и ты будешь получать расписание!';
-
+        
         $this->sendMessage($message);
     }
-
+    
     protected function sendMessage($message, $parse_html = FALSE)
     {
         try {
@@ -110,27 +126,30 @@ class TelegramController extends Controller
                 'chat_id' => $this->chat_id,
                 'text' => $message,
             ];
-
+            
             if ($parse_html) $data['parse_mode'] = 'HTML';
-
+            
             $this->telegram->sendMessage($data);
         } catch (\Exception $e) {
             $this->telegram->sendMessage([
                 'chat_id' => '541726137',
                 'text' => $e->getMessage(),
             ]);
-
+            
         }
     }
-
+    
     public function timetableSend($flag = 1)
     {
         if ($flag == 1) {
             $startMessage = 'Расписание на сегодня:';
             $date = Carbon::parse(\request('date', now()));
-        } else {
+        } elseif ($flag == 2) {
             $startMessage = 'Расписание на завтра:';
             $date = Carbon::parse(\request('date', now()->addDay()));
+        } else {
+            $date = Carbon::parse($flag);
+            $startMessage = 'Расписание на ' . $this->weekDay[$date->dayOfWeek] . ' ' . $date->copy()->format('d.m.Y');
         }
         $timetable = Timetable::query()
             ->where('date', 'LIKE', '%' . $date->toDateString() . '%')
@@ -148,32 +167,37 @@ class TelegramController extends Controller
         } else {
             $message = 'Выходной';
         }
-
+        
         $this->telegram->sendMessage([
                 'chat_id' => $tg_id ?? $this->chat_id,
                 'text' => $startMessage . ' ' . $message,
             ]
         );
     }
-
+    
     public function sendAll()
     {
         ;
         $users = \App\User::query()->whereNotNull('group_id')->whereNotNull('tg_id')->get();
         foreach ($users as $user) {
             $this->chat_id = $user->tg_id;
-            $this->timetableSend(\request('flag',1));
+            $this->timetableSend(\request('flag', 1));
         }
     }
-
-    public function start(){
+    
+    public function start()
+    {
         TimetableNoticeStart::handle();
     }
-    public function end(){
+    
+    public function end()
+    {
         TimetableNoticeEnd::handle();
     }
-    public function create(){
+    
+    public function create()
+    {
         TimetableCreate::handle();
     }
-
+    
 }
