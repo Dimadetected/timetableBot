@@ -150,10 +150,11 @@ class TelegramController extends Controller
 
     public function sendAll()
     {
+        ;
         $users = \App\User::query()->whereNotNull('group_id')->whereNotNull('tg_id')->get();
         foreach ($users as $user){
             $this->chat_id = $user->tg_id;
-            $this->timetableSend(2);
+            $this->timetableSend(\request('flag',1));
         }
     }
 
