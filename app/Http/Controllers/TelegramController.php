@@ -55,7 +55,7 @@ class TelegramController extends Controller
             logger($request['callback_query']);
         
         $this->chat_id = $request['message']['chat']['id']??$request['callback_query']['from']['id'];
-        $this->username = $request['message']['from']['username']??$request['callback_query']['from']['userName'];
+        $this->username = $request['message']['from']['username']??$request['callback_query']['from']['username'];
         $this->text = $request['message']['text']??$request['callback_query']['data'];
         
         
