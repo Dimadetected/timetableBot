@@ -176,7 +176,7 @@ class TelegramController extends Controller
                 $type = 'z';
             foreach ($timetable->timetable as $times => $arr)
                 if (isset($arr[$type]))
-                    $message .= $arr[$type]['time'] . PHP_EOL . '   -' . $arr[$type]['lecture'] . PHP_EOL .'   -' . $arr[$type]['teacher'] . PHP_EOL;
+                    $message .= $arr[$type]['time'] . PHP_EOL . '   -' . $arr[$type]['lecture'] . PHP_EOL .'     -' . $arr[$type]['teacher'] . PHP_EOL;
         } else {
             $message = 'Выходной';
         }
