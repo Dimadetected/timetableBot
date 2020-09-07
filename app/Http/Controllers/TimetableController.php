@@ -34,7 +34,7 @@ class TimetableController extends Controller
     {
         abort_if(!auth()->check(),403,'Доступ запрещен');
         $user= auth()->user();
-        $items = Timetable::query()->where('group_id',$user->group_id)->orderBy('date','asc')->get();
+        $items = Timetable::query()->where('group_id',$user->group_id)->where('date','>=',now()->format('Y-m-d 00:00:00'))->orderBy('date','asc')->get();
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));
     }
