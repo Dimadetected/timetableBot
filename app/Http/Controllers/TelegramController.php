@@ -54,10 +54,9 @@ class TelegramController extends Controller
         if (isset($request['callback_query']))
             logger($request['callback_query']);
         
-        $this->chat_id = $request['message']['chat']['id']??$request['callback_query']['from']['id'];
-        $this->username = $request['message']['from']['username']??$request['callback_query']['from']['username'];
-        $this->text = $request['message']['text']??$request['callback_query']['data'];
-        
+        $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
+        $this->username = $request['message']['from']['username'] ?? $request['callback_query']['from']['username'];
+        $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
         
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
@@ -110,17 +109,17 @@ class TelegramController extends Controller
         
         $inline_keyboard = Keyboard::make()
             ->inline()
-            ->row(Keyboard::inlineButton(["text" => "Сегодня", 'callback_data' => '/today']))
-            ->row(Keyboard::inlineButton(["text" => "Завтра", 'callback_data' => '/tomorrow']));
+            ->row([
+                Keyboard::inlineButton(["text" => "Сегодня", 'callback_data' => '/today']),
+                Keyboard::inlineButton(["text" => "Завтра", 'callback_data' => '/tomorrow'])
+            ]);
         
-        $message = '';
-        $message .= '/today' . chr(10);
-        $message .= '/tomorrow' . chr(10);
-        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
+//        $message = '';
+//        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
         
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
-            'text' => $message,
+//            'text' => $message,
             'reply_markup' => $inline_keyboard,
         ]);
     }
