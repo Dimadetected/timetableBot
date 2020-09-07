@@ -29,7 +29,7 @@
                                 <tr>
                                     <td>{{$arr['z']['time']??$arr['c']['time']}}</td>
                                     @if(isset($arr['z']['time']) and  isset($arr['c']['time']))
-                                        @if($arr['z']['lecture'] == isset($arr['c']['lecture']))
+                                        @if($arr['z']['lecture'] == ($arr['c']['lecture']))
                                             <td>{{$arr['z']['lecture']}}</td>
                                             <td>{{$arr['z']['teacher']}}</td>
                                         @else

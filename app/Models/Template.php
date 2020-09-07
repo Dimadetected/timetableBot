@@ -48,12 +48,10 @@ class Template extends Model
         $times_c = $this->type['c']['times'];
         $lectures_c = Lecture::query()->whereIn('id', $lectures_ids_c)->pluck('name', 'id')->toArray();
         $teachers_c = User::query()->whereIn('id', $teachers_ids_c)->pluck('name', 'id')->toArray();
-        dump($times_c);
         
         $lectures_ids_z = $this->type['z']['lectures'];
         $teachers_ids_z = $this->type['z']['teachers'];
         $times_z = $this->type['z']['times'];
-        dump($times_z);
     
         $lectures_z = Lecture::query()->whereIn('id', $lectures_ids_z)->pluck('name', 'id')->toArray();
         $teachers_z = User::query()->whereIn('id', $teachers_ids_z)->pluck('name', 'id')->toArray();

@@ -27,7 +27,7 @@
                             <div class="  ">
                                 <div class="h3 text-success">{{$arr['z']['time']??$arr['c']['time']}}</div>
                                 @if(isset($arr['z']['time']) and  isset($arr['c']['time']))
-                                    @if($arr['z']['lecture'] == isset($arr['c']['lecture']))
+                                    @if($arr['z']['lecture'] == ($arr['c']['lecture']))
                                         <span>{{$arr['z']['lecture']}}</span>
                                         <span>{{$arr['z']['teacher']}}</span><br>
                                     @else
