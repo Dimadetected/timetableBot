@@ -109,10 +109,10 @@ class TelegramController extends Controller
         
         $inline_keyboard = Keyboard::make()
             ->inline()
-            ->row([
+            ->row(
                 Keyboard::inlineButton(["text" => "Сегодня", 'callback_data' => '/today']),
                 Keyboard::inlineButton(["text" => "Завтра", 'callback_data' => '/tomorrow'])
-            ]);
+            );
         
 //        $message = '';
 //        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
