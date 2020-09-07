@@ -32,7 +32,6 @@ class TimetableController extends Controller
 
     public function index()
     {
-        dd(now());
         abort_if(!auth()->check(),403,'Доступ запрещен');
         $user= auth()->user();
         $items = Timetable::query()->where('group_id',$user->group_id)->orderBy('date','asc')->get();
