@@ -107,9 +107,6 @@ class TelegramController extends Controller
     
     public function showMenu($info = NULL)
     {
-        $inline_button0 = ["text" => "Сегодня", "callback_data" => "/today"];
-        $inline_button1 = ["text" => "Завтра", "callback_data" => '/tomorrow'];
-        $inline_keyboard = [[$inline_button0, $inline_button1]];
     
         $inline_keyboard = Keyboard::make()
             ->inline()
