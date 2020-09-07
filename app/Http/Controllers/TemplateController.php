@@ -43,8 +43,8 @@ class TemplateController extends Controller
         if ($id)
             $item = Template::query()->find($id);
         
-        dump($item->timetable);
-        dd($item->type);
+        dd($item->timetable);
+        
         
         $usersType = UsersType::query()->find($this->teacherTypeId);
         
