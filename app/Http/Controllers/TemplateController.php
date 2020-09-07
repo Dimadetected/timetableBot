@@ -43,6 +43,9 @@ class TemplateController extends Controller
         if ($id)
             $item = Template::query()->find($id);
         
+        dump($item->timetable);
+        dd($item->type);
+        
         $usersType = UsersType::query()->find($this->teacherTypeId);
         
         $daysOfWeek = [
