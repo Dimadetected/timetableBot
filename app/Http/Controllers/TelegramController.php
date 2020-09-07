@@ -103,12 +103,25 @@ class TelegramController extends Controller
     
     public function showMenu($info = NULL)
     {
+        $inline_button0 = ["text" => "Сегодня", "callback_data" => "/today"];
+        $inline_button1 = ["text" => "Завтра", "callback_data" => '/tomorrow'];
+        $inline_keyboard = [[$inline_button0, $inline_button1]];
+    
+        $inline_keyboard = Keyboard::make()
+            ->inline()
+            ->row(Keyboard::inlineButton(["text" => "Сегодня", 'callback_data' =>'/today']))
+            ->row(Keyboard::inlineButton(["text" => "Завтра", 'callback_data' =>'/tomorrow']));
+        
         $message = '';
         $message .= '/today' . chr(10);
         $message .= '/tomorrow' . chr(10);
         $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: '. PHP_EOL.'/date ' . now()->format('d.m.Y') . chr(10);
         
-        $this->sendMessage($message);
+        $this->telegram->sendMessage([
+            'chat_id' => $this->chat_id,
+            'text' => $message,
+            'reply_markup' => $inline_keyboard
+        ]);
     }
     
     public function newUser()
