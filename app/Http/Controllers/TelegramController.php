@@ -51,15 +51,15 @@ class TelegramController extends Controller
     
     public function handleRequest(Request $request)
     {
-//        $this->telegram->sendMessage([
-//            'chat_id' => 541726137,
-//            'text' => json_encode($request['callback_query'])
-//        ]);
+        if (isset($request['callback_query']))
+            $this->telegram->sendMessage([
+                'chat_id' => 541726137,
+                'text' => json_encode($request['callback_query']),
+            ]);
+        
         $this->chat_id = $request['message']['chat']['id'];
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
-        
-        
         
         $this->sendMessage(json_encode($request['message']));
         
@@ -111,21 +111,21 @@ class TelegramController extends Controller
     
     public function showMenu($info = NULL)
     {
-    
+        
         $inline_keyboard = Keyboard::make()
             ->inline()
-            ->row(Keyboard::inlineButton(["text" => "Сегодня", 'callback_data' =>'/today']))
-            ->row(Keyboard::inlineButton(["text" => "Завтра", 'callback_data' =>'/tomorrow']));
+            ->row(Keyboard::inlineButton(["text" => "Сегодня", 'callback_data' => '/today']))
+            ->row(Keyboard::inlineButton(["text" => "Завтра", 'callback_data' => '/tomorrow']));
         
         $message = '';
         $message .= '/today' . chr(10);
         $message .= '/tomorrow' . chr(10);
-        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: '. PHP_EOL.'/date ' . now()->format('d.m.Y') . chr(10);
+        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
         
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => $message,
-            'reply_markup' => $inline_keyboard
+            'reply_markup' => $inline_keyboard,
         ]);
     }
     
@@ -168,7 +168,7 @@ class TelegramController extends Controller
             $date = Carbon::parse($flag);
             $startMessage = 'Расписание на '
                 . $this->weekDay[$date->dayOfWeek] . ' '
-              .  $date->copy()->format('d.m.Y');
+                . $date->copy()->format('d.m.Y');
         }
         $timetable = Timetable::query()
             ->where('date', 'LIKE', '%' . $date->toDateString() . '%')
