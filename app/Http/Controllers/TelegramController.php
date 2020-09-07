@@ -57,7 +57,8 @@ class TelegramController extends Controller
         
         
         
-        $this->sendMessage('123');
+        $this->sendMessage(json_encode($request['callback_query']));
+        $this->sendMessage(json_encode($request['message']));
         
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,

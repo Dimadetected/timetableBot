@@ -23,6 +23,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/start', 'TelegramController@start')->name('start');
     Route::get('/end', 'TelegramController@end')->name('end');
     Route::get('/create', 'TelegramController@create')->name('create');
+    
     //Расписание
     Route::get('/', 'TimetableController@index')->name('index');
     Route::prefix('timetable')->name('timetable.')->group(function () {
