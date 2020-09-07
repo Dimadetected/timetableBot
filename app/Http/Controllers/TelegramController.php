@@ -51,10 +51,10 @@ class TelegramController extends Controller
     
     public function handleRequest(Request $request)
     {
-        $this->telegram->sendMessage([
-            'chat_id' => 541726137,
-            'text' => json_encode($request['callback_query'])
-        ]);
+//        $this->telegram->sendMessage([
+//            'chat_id' => 541726137,
+//            'text' => json_encode($request['callback_query'])
+//        ]);
         $this->chat_id = $request['message']['chat']['id'];
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
