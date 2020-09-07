@@ -58,7 +58,6 @@ class TelegramController extends Controller
         $this->username = $request['message']['from']['username']??$request['callback_query']['from']['userName'];
         $this->text = $request['message']['text']??$request['callback_query']['data'];
         
-        $this->sendMessage(json_encode($request['message']));
         
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
