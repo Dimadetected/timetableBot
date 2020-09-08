@@ -39,7 +39,7 @@ class TelegramController extends Controller
 
     public function getMe()
     {
-        $response = $this->telegram->getMe();
+        $response = $this->redBtnBot->getMe();
         return $response;
     }
 
