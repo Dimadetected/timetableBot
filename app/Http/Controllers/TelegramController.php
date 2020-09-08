@@ -77,7 +77,7 @@ class TelegramController extends Controller
         $inline_keyboard = Keyboard::make()
             ->inline()
             ->row(
-                Keyboard::inlineButton(["text" => "Кнопка", 'callback_data' => 'Кнопка'])
+                Keyboard::inlineButton(["text" => "Кнопка :red_circle:", 'callback_data' => 'Кнопка'])
             );
 
         $this->redBtnBot->sendMessage([
