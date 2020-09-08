@@ -77,7 +77,7 @@ class TelegramController extends Controller
         $inline_keyboard = Keyboard::make()
             ->inline()
             ->row(
-                Keyboard::inlineButton(["text" => json_encode('&#128308;'), 'callback_data' => 'Кнопка'])
+                Keyboard::inlineButton(["text" => "\ud83d\udd34", 'callback_data' => 'Кнопка'])
             );
 
         $this->redBtnBot->sendMessage([
@@ -86,7 +86,7 @@ class TelegramController extends Controller
             'reply_markup' => $inline_keyboard
         ]);
         $user->step = $question->step + 1;
-        $user->msg_id = $request['message']['message_id']??$request['callback_query']['message']['message_id'];
+        $user->msg_id = $request['message']['message_id'] ?? $request['callback_query']['message']['message_id'];
         $user->save();
 
         return 200;
