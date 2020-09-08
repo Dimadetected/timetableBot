@@ -65,7 +65,7 @@ class TelegramController extends Controller
         $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
         $this->username = $request['message']['from']['username'] ?? $request['callback_query']['from']['username'];
         $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
-
+        logger($request['message']);
         $user = RedBtnUser::query()->firstOrCreate(['tg_id' => $this->chat_id], ['step' => 0]);
         $question = RedBtnQuestion::query()->where('step', $user->step)->first();
 
@@ -81,6 +81,7 @@ class TelegramController extends Controller
                 'text' => $question->text,
                 'reply_markup' => $inline_keyboard
             ]);
+            $user->step = 0;
         } else {
             $this->redBtnBot->sendMessage([
                 'chat_id' => $this->chat_id,

@@ -17,7 +17,7 @@ class CreateRedBtnUsersTable extends Migration
             $table->id();
             $table->string('tg_id');
             $table->integer('step');
-            $table->string('msg_id');
+            $table->string('msg_id')->nullable();
             $table->timestamps();
         });
     }
