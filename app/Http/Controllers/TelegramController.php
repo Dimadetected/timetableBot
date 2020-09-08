@@ -81,13 +81,12 @@ class TelegramController extends Controller
             $this->redBtnBot->deleteMessage([
                 'chat_id' => $this->chat_id,
                 'message_id' => $user->msg_id,
+            ]); else
+            $this->redBtnBot->sendMessage([
+                'chat_id' => $this->chat_id,
+                'text' => 'Сыграем?',
+                'reply_markup' => $inline_keyboard
             ]);
-        $user->step = 0;
-        $this->redBtnBot->sendMessage([
-            'chat_id' => $this->chat_id,
-            'text' => 'Сыграем?',
-            'reply_markup' => $inline_keyboard
-        ]);
         $this->redBtnBot->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => $question->text,
