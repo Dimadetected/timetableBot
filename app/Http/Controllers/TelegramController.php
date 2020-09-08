@@ -83,8 +83,8 @@ class TelegramController extends Controller
                 'message_id' => $user->msg_id,
                 'text' => $question->text,
             ]);
-            $user->step = 0;
         } else {
+            $user->step = 0;
             $this->redBtnBot->sendMessage([
                 'chat_id' => $this->chat_id,
                 'text' => 'Сыграем?',
