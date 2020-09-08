@@ -16,6 +16,7 @@ use Telegram\Bot\Keyboard\Keyboard;
 class TelegramController extends Controller
 {
     protected $telegram;
+    protected $redBtnBot;
     protected $chat_id;
     protected $username;
     protected $text;
@@ -33,6 +34,7 @@ class TelegramController extends Controller
     public function __construct()
     {
         $this->telegram = new Api(config('telegram.bots.mybot.token'));
+        $this->redBtnBot = new Api(config('telegram.bots.redBtn.token'));
     }
 
     public function getMe()
@@ -44,7 +46,7 @@ class TelegramController extends Controller
     public function setWebHook()
     {
         $url = 'https://kubsu.4wr.ru/' . config('telegram.bots.redBtn.token') . '/webhook';
-        $response = $this->telegram->setWebhook(['url' => $url]);
+        $response = $this->redBtnBot->setWebhook(['url' => $url]);
 
         return $response == TRUE ? $response : dd($response);
     }
