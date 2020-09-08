@@ -71,6 +71,8 @@ class TelegramController extends Controller
 
         logger($user);
         logger($question);
+        if (isset($request['callback_query']))
+            logger($request['callback_query']);
 
         $inline_keyboard = Keyboard::make()
             ->inline()
@@ -84,7 +86,7 @@ class TelegramController extends Controller
             'reply_markup' => $inline_keyboard
         ]);
         $user->step = $question->step + 1;
-        $user->msg_id = $request['message']['message_id'];
+//        $user->msg_id = $request['message']['message_id'];
         $user->save();
 
         return 200;
