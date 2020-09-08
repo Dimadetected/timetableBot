@@ -15,6 +15,8 @@ use \Illuminate\Support\Facades\Auth;
 */
 
 Route::post('/' . config('telegram.bots.mybot.token') . '/webhook', 'TelegramController@handleRequest');
+Route::post('/getMe', 'TelegramController@getMe');
+Route::post('/setWebHook', 'TelegramController@setWebHook');
 Route::post('/' . config('telegram.bots.redBtn.token') . '/webhook', 'TelegramController@redBtnBot');
 
 Route::get('/tel', 'TelegramController@timetableSend')->name('timetableSend');
