@@ -43,7 +43,7 @@ class TelegramController extends Controller
 
     public function setWebHook()
     {
-        $url = 'https://kubsu.4wr.ru/' . config('telegram.bots.mybot.token') . '/webhook';
+        $url = 'https://kubsu.4wr.ru/' . config('telegram.bots.redBtn.token') . '/webhook';
         $response = $this->telegram->setWebhook(['url' => $url]);
 
         return $response == TRUE ? $response : dd($response);
