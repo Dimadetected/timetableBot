@@ -57,7 +57,10 @@ class TelegramController extends Controller
         $this->username = $request['message']['from']['username'] ?? $request['callback_query']['from']['username'];
         $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
 
-        $this->sendMessage('Сыграем?');
+        $this->redBtnBot->sendMessage([
+            'chat_id' => $this->chat_id,
+            'text' => 'Сыграем?'
+        ]);
         return 200;
     }
 
