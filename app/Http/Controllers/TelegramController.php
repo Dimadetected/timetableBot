@@ -95,7 +95,7 @@ class TelegramController extends Controller
             ]);
         }
         $user->step = $user->step++;
-        $user->msg_id = $request['message']['id'];
+//        $user->msg_id = $request['message']['id'];
         $user->save();
 
         return 200;
