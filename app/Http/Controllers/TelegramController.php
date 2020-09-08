@@ -69,6 +69,9 @@ class TelegramController extends Controller
         $user = RedBtnUser::query()->firstOrCreate(['tg_id' => $this->chat_id], ['step' => 0]);
         $question = RedBtnQuestion::query()->where('step', $user->step)->first();
 
+        logger($user);
+        logger($question);
+
         $inline_keyboard = Keyboard::make()
             ->inline()
             ->row(
@@ -79,7 +82,6 @@ class TelegramController extends Controller
                 'chat_id' => $this->chat_id,
                 'message_id' => $user->msg_id,
                 'text' => $question->text,
-                'reply_markup' => $inline_keyboard
             ]);
             $user->step = 0;
         } else {
@@ -94,7 +96,7 @@ class TelegramController extends Controller
                 'reply_markup' => $inline_keyboard
             ]);
         }
-        $user->step = $user->step++;
+        $user->step = $user->step + 1;
         $user->msg_id = $request['message']['message_id'];
         $user->save();
 
