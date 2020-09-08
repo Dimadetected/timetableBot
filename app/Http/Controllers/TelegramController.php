@@ -77,16 +77,7 @@ class TelegramController extends Controller
             ->row(
                 Keyboard::inlineButton(["text" => "Кнопка", 'callback_data' => 'Кнопка'])
             );
-        if (isset($user->msg_id))
-            $this->redBtnBot->deleteMessage([
-                'chat_id' => $this->chat_id,
-                'message_id' => $user->msg_id,
-            ]); else
-            $this->redBtnBot->sendMessage([
-                'chat_id' => $this->chat_id,
-                'text' => 'Сыграем?',
-                'reply_markup' => $inline_keyboard
-            ]);
+
         $this->redBtnBot->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => $question->text,
