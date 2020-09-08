@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Jobs\TimetableCreate;
 use App\Jobs\TimetableNoticeEnd;
 use App\Jobs\TimetableNoticeStart;
+use App\Models\RedBtnQuestion;
+use App\Models\RedBtnUser;
 use App\Models\Timetable;
 use App\Telegram;
 use Carbon\Carbon;
@@ -39,6 +41,13 @@ class TelegramController extends Controller
 
     public function getMe()
     {
+        foreach (json_decode(file_get_contents(public_path('stages.json')), true) as $key => $arr)
+            if (isset($arr['message']))
+                RedBtnQuestion::query()->updateOrCreate([
+                    'step' => $key
+                ], [
+                    'text' => $arr['message']
+                ]);
         $response = $this->redBtnBot->getMe();
         return $response;
     }
@@ -57,10 +66,37 @@ class TelegramController extends Controller
         $this->username = $request['message']['from']['username'] ?? $request['callback_query']['from']['username'];
         $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
 
-        $this->redBtnBot->sendMessage([
-            'chat_id' => $this->chat_id,
-            'text' => 'Сыграем?'
-        ]);
+        $user = RedBtnUser::query()->firstOrCreate(['tg_id' => $this->chat_id], ['step' => 0]);
+        $question = RedBtnQuestion::query()->where('step', $user->step)->first();
+
+        $inline_keyboard = Keyboard::make()
+            ->inline()
+            ->row(
+                Keyboard::inlineButton(["text" => "Кнопка", 'callback_data' => 'Кнопка'])
+            );
+        if (isset($user->msg_id)) {
+            $this->redBtnBot->editMessageText([
+                'chat_id' => $this->chat_id,
+                'message_id' => $user->msg_id,
+                'text' => $question->text,
+                'reply_markup' => $inline_keyboard
+            ]);
+        } else {
+            $this->redBtnBot->sendMessage([
+                'chat_id' => $this->chat_id,
+                'text' => 'Сыграем?',
+                'reply_markup' => $inline_keyboard
+            ]);
+            $this->redBtnBot->sendMessage([
+                'chat_id' => $this->chat_id,
+                'text' => $question->text,
+                'reply_markup' => $inline_keyboard
+            ]);
+        }
+        $user->step = $user->step++;
+        $user->msg_id = $request['message']['id'];
+        $user->save();
+
         return 200;
     }
 
