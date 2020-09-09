@@ -11,9 +11,17 @@
         <div class="col-md-6 offset-md-3 card card-body">
             <form action="{{route($routes['store'])}}" method="post">
                 @csrf
-                    <input type="text" hidden name="id" value="{{$item->id}}">
+                <input type="text" hidden name="id" value="{{$item->id}}">
+                <select name="group_id" id="">
+                    @foreach($groups as $group)
+                        <option @if($group->id == $item->group->id) selected
+                                @elseif(auth()->user()->group_id == $group->id) selected
+                                @endif value="{{$group->id}}">{{$group->name}}</option>
+                    @endforeach
+                </select>
                 <div class="form-group">
-                    <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{$item->name}}" id="name" name="name" placeholder="Введите название предмета">
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" value="{{$item->name}}"
+                           id="name" name="name" placeholder="Введите название предмета">
                 </div>
                 <button class="btn btn-success btn-block">Сохранить</button>
             </form>

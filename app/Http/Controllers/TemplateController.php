@@ -32,7 +32,6 @@ class TemplateController extends Controller
 
     public function index()
     {
-        dd(now());
         $items = Template::query()->get();
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));
