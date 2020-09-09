@@ -92,7 +92,7 @@ class TemplateController extends Controller
         $groups = Group::query()->get();
         $faculties = Faculty::query()->get();
         $courses = Course::query()->get();
-        $lectures = Lecture::query()->get();
+        $lectures = Lecture::query()->where('group_id',auth()->user()->group_id)->get();
 
         Carbon::setLocale('ru');
         $routes = $this->routes;
