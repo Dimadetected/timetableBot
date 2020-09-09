@@ -32,7 +32,7 @@ class TemplateController extends Controller
 
     public function index()
     {
-        $items = Template::query()->where('group_id',auth()->user()->id)->get();
+        $items = Template::query()->where('group_id',auth()->user()->group_id)->get();
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));
     }
