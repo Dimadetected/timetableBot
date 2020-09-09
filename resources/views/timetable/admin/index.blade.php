@@ -35,6 +35,7 @@
                                             {{$arr['c']['teacher']}}<br>
                                                <br>
                                             </span>
+                                        <hr>
                                         <span>
                                                 {{$arr['z']['teacher']}}
                                             {{$arr['z']['lecture']}}
@@ -46,6 +47,7 @@
                                         <span style="border-bottom: 1px solid gray">
                                                 {{$arr['c']['lecture']}} {{$arr['c']['teacher']}} <br>
                                             </span>
+                                        <hr>
                                         <span >
                                                 Chill Time
                                             </span>
@@ -54,6 +56,8 @@
                                                 Chill Time<br>
 
                                             </span>
+                                        <hr>
+
                                         <span>
                                                 {{$arr['z']['lecture']}}
                                             {{$arr['z']['teacher']}}
@@ -61,7 +65,6 @@
                                     @endif
                                 @endif
                             </div>
-                            <hr>
                         @endforeach
                         <br>
                     </div>
