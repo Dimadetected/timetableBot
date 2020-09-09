@@ -160,7 +160,7 @@ class TelegramController extends Controller
                 Keyboard::inlineButton(["text" => "Завтра", 'callback_data' => '/tomorrow'])
             );
 
-        $message = 'Выберите день:';
+        $message = 'Необходимо выбрать день';
 //        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
 
         $this->telegram->sendMessage([
