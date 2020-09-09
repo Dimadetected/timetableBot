@@ -19,8 +19,7 @@
                     <div class="h4 text-center">
                         {{\Carbon\Carbon::parse($item->date)->format('d.m.Y')}}
                     </div>
-                    <div class="text-center d-md-none card-body card">
-                        <hr>
+                    <div class="text-center d-md-none card-body card my-3">
                         @php $printArr = $item->timetable ; $j = 0 @endphp
                         @foreach( $printArr as $i=>$arr)
                             @php $j++ @endphp
