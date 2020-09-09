@@ -21,7 +21,7 @@ class LectureController extends Controller
 
     public function index()
     {
-        $items = Lecture::query()->get();
+        $items = Lecture::query()->where('group_id',auth()->user()->group_id)->get();
 
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));
@@ -35,7 +35,7 @@ class LectureController extends Controller
 
         $groups = Group::query()->get();
         $routes = $this->routes;
-        return view($this->views['form'], compact('item', 'routes'));
+        return view($this->views['form'], compact('item', 'routes','groups'));
     }
 
     public function store(LectureFormRequest $request)
