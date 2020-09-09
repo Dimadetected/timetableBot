@@ -38,7 +38,7 @@ class TimetableCreate implements ShouldQueue
         foreach ($templates as $template) {
             foreach ($period as $date) {
                 if ($date->dayOfWeek == $template->dayOfWeek) {
-                    Timetable::query()->updateOrCreate([
+                    $timetable = Timetable::query()->updateOrCreate([
                         'date' => $date->copy()->format('Y-m-d 00:00:00'),
                         'group_id' => $template->group_id,
                         'dayOfWeek' => $template->dayOfWeek

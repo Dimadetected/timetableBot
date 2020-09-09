@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         })->dailyAt('07:00');
         $schedule->call(function () {
             TimetableCreate::handle();
-        })->hourly();
+        })->everyMinute();
     }
 
     /**
