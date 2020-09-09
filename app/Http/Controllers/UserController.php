@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    
+
     private $views = [
         'index' => 'users.admin.index',
         'form' => 'users.admin.form',
@@ -21,14 +21,14 @@ class UserController extends Controller
         'form' => 'admin.users.form',
         'store' => 'admin.users.store',
     ];
-    
+
     public function index()
     {
-        $items = User::query()->with(['users_type','group'])->get();
+        $items = User::query()->with(['users_type','group'])->where('group_id',auth()->user()->group_id)->get();
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));
     }
-    
+
     public function form($id = FALSE)
     {
         $item = new User();
@@ -39,7 +39,7 @@ class UserController extends Controller
         $routes = $this->routes;
         return view($this->views['form'], compact('item', 'routes', 'usersTypes', 'groups'));
     }
-    
+
     public function store(UserFormRequest $request)
     {
         $id = $request->id;
@@ -53,7 +53,7 @@ class UserController extends Controller
             'users_type_id' => $request->users_type_id,
             'group_id' => ($request->group_id != 'null' ? $request->group_id : NULL),
         ]);
-        
+
         return redirect()->route($this->routes['index']);
     }
 }
