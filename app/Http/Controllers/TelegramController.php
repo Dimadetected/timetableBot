@@ -99,6 +99,7 @@ class TelegramController extends Controller
 
         $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
         $this->username = $request['message']['from']['username'] ?? $request['callback_query']['from']['username'];
+        logger($request['message']);
         $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
 
         $user = \App\User::query()->firstOrCreate([
