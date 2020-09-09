@@ -46,7 +46,7 @@
                                         <span style="border-bottom: 1px solid gray">
                                                 {{$arr['c']['lecture']}} {{$arr['c']['teacher']}} <br>
                                             </span>
-                                        <span >
+                                        <span>
                                                 Chill Time
                                             </span>
                                     @elseif(isset($arr['z']['lecture']))
@@ -62,6 +62,9 @@
                                     @endif
                                 @endif
                             </div>
+                            @if($i!= count($printArr)-1)
+                                <hr>
+                            @endif
                         @endforeach
                         <br>
                     </div>
