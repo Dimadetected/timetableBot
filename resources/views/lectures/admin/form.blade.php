@@ -12,7 +12,7 @@
             <form action="{{route($routes['store'])}}" method="post">
                 @csrf
                 <input type="text" hidden name="id" value="{{$item->id}}">
-                <select name="group_id" id="">
+                <select name="group_id" id="" class="form-control">
                     @foreach($groups as $group)
                         <option @if(isset($item->group->id) and $group->id == $item->group->id) selected
                                 @elseif(auth()->user()->group_id == $group->id) selected
