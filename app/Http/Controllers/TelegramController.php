@@ -20,7 +20,6 @@ class TelegramController extends Controller
     protected $telegram;
     protected $redBtnBot;
     protected $chat_id;
-    protected $username;
     protected $text;
     protected $user;
     protected $weekDay = [
@@ -63,7 +62,6 @@ class TelegramController extends Controller
     public function redBtnBot(Request $request)
     {
         $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
-        $this->username = $request['message']['from']['username'] ?? $request['callback_query']['from']['username'];
         $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
         logger($request['message']);
         $user = RedBtnUser::query()->firstOrCreate(['tg_id' => $this->chat_id], ['step' => 0]);
@@ -99,8 +97,7 @@ class TelegramController extends Controller
 
         logger($request['message']);
         $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
-        $this->username = $request['message']['from']['username'] ?? $request['callback_query']['from']['username'];
-        if (!isset($request['message']['text']) and !isset($request['callback_query']['data']) or (!isset($request['message']['from']['username']) and !isset($request['callback_query']['from']['username'])))
+        if (!isset($request['message']['text']) and !isset($request['callback_query']['data']))
             return 200;
         $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
 
