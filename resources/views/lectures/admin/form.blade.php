@@ -14,7 +14,7 @@
                 <input type="text" hidden name="id" value="{{$item->id}}">
                 <select name="group_id" id="">
                     @foreach($groups as $group)
-                        <option @if($group->id == $item->group->id) selected
+                        <option @if(isset($item->group->id) and $group->id == $item->group->id) selected
                                 @elseif(auth()->user()->group_id == $group->id) selected
                                 @endif value="{{$group->id}}">{{$group->name}}</option>
                     @endforeach
