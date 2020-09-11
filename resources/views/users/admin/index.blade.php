@@ -22,7 +22,7 @@
             @foreach($items as $item)
                 <tr>
                     <td>{{$item->name}}</td>
-                    <td>{{$item->users_type->name}}</td>
+                    <td>{{$item->users_type->name??''}}</td>
 
                     <td>{{$item->group->faculty->name??''}}</td>
                     <td>{{$item->group->name??''}}</td>
