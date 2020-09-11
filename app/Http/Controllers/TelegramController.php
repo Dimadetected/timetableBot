@@ -97,10 +97,10 @@ class TelegramController extends Controller
         if (isset($request['callback_query']))
             logger($request['callback_query']);
 
+        logger($request['message']);
         $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
         $this->username = $request['message']['from']['username'] ?? $request['callback_query']['from']['username'];
-        logger($request['message']);
-        if (!isset($request['message']['text']) and !isset($request['callback_query']['data']))
+        if (!isset($request['message']['text']) and !isset($request['callback_query']['data']) or (!isset($request['message']['from']['username']) and !isset($request['callback_query']['from']['username'])))
             return 200;
         $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
 
