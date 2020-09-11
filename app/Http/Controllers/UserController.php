@@ -24,7 +24,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $items = User::query()->with(['users_type','group'])->where('group_id',auth()->user()->group_id)->get();
+        $items = User::query()->with(['users_type','group'])->get();
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));
     }
