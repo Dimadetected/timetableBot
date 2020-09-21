@@ -192,7 +192,6 @@ class TelegramController extends Controller
             }
             $this->telegram->sendMessage([
                 'chat_id' => $this->chat_id,
-                'text' => 123,
                 'reply_markup' => $inline_keyboard,
             ]);
         }
@@ -304,7 +303,6 @@ class TelegramController extends Controller
 
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
-            'text' => 1,
             'reply_markup' => $inline_keyboard,
         ]);
     }
