@@ -141,6 +141,8 @@ class TelegramController extends Controller
                         break;
                     case  '/calendar':
                         $this->calendar();
+                        return 200;
+                        break;
                 }
                 $this->showMenu();
 
