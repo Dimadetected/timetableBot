@@ -174,18 +174,18 @@ class TelegramController extends Controller
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
                 $inline_keyboard->row(
-                    Keyboard::inlineButton(["text" => $timetables[$i], 'callback_data' => '/' . $timetables[$i]]),
-                    Keyboard::inlineButton(["text" => $timetables[$i + 1], 'callback_data' => '/' . $timetables[$i + 1]]),
-                    Keyboard::inlineButton(["text" => $timetables[$i + 2], 'callback_data' => '/' . $timetables[$i + 2]])
+                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/_' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
+                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/_' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')]),
+                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i + 2])->format('d'), 'callback_data' => '/_' . Carbon::parse($timetables[$i + 2])->format('Y-m-d')])
                 );
             } elseif (isset($timetables[$i]) and isset($timetables[$i + 1])) {
                 $inline_keyboard->row(
-                    Keyboard::inlineButton(["text" => $timetables[$i], 'callback_data' => '/' . $timetables[$i]]),
-                    Keyboard::inlineButton(["text" => $timetables[$i + 1], 'callback_data' => '/' . $timetables[$i + 1]]),
+                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/_' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
+                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/_' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')])
                 );
             } elseif (isset($timetables[$i])) {
                 $inline_keyboard->row(
-                    Keyboard::inlineButton(["text" => $timetables[$i], 'callback_data' => '/' . $timetables[$i]]),
+                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/_' . Carbon::parse($timetables[$i])->format('Y-m-d')])
                 );
             }
         }
