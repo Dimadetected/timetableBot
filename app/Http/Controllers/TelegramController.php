@@ -250,6 +250,7 @@ class TelegramController extends Controller
             if (!in_array(Carbon::parse($timetable->date)->monthName,$months))
                 $months[] = $timetable->date;
         }
+        logger($months);
         $inline_keyboard = Keyboard::make()
             ->inline();
         foreach ($months as $month)
@@ -257,6 +258,7 @@ class TelegramController extends Controller
 
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
+            'text' => 1,
             'reply_markup' => $inline_keyboard,
         ]);
     }
