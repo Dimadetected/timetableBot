@@ -168,6 +168,7 @@ class TelegramController extends Controller
         $timetables = Timetable::query()
             ->where('date', 'LIKE', '%-' . $month . '-%')
             ->where('group_id', $this->user->group_id)
+            ->orderBy('date','asc')
             ->pluck('date');
         $inline_keyboard = Keyboard::make()
             ->inline();
