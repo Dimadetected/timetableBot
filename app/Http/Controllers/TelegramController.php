@@ -139,10 +139,9 @@ class TelegramController extends Controller
                     case '/tomorrow':
                         $this->timetableSend(2);
                         break;
-//                    case  '/calendar':
-//                        $this->calendar();
-//                        return 200;
-//                        break;
+                    case  '/calendar':
+                        $this->calendar();
+                        break;
                 }
                 $this->showMenu();
 
@@ -160,10 +159,10 @@ class TelegramController extends Controller
                 Keyboard::inlineButton(["text" => "Сегодня", 'callback_data' => '/today']),
                 Keyboard::inlineButton(["text" => "Завтра", 'callback_data' => '/tomorrow'])
             );
-//        if ($this->chat_id == 541726137)
-//            $inline_keyboard->row(
-//                Keyboard::inlineButton(["text" => "Календарь", 'callback_data' => '/calendar'])
-//            );
+        if ($this->chat_id == 541726137)
+            $inline_keyboard->row(
+                Keyboard::inlineButton(["text" => "Календарь", 'callback_data' => '/calendar'])
+            );
 
         $message = 'Необходимо выбрать день';
 //        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
@@ -241,25 +240,25 @@ class TelegramController extends Controller
 
     private function calendar()
     {
-        $months = [];
-        $timetables = Timetable::query()
-            ->where('date', '>=', now()->format('Y-m-d 00:00:00'))
-            ->where('group_id', $this->user->group_id)
-            ->get();
-        foreach ($timetables as $timetable){
-            if (!in_array(Carbon::parse($timetable->date)->monthName,$months))
-                $months[] = $timetable->date;
-        }
-        logger($months);
-        $inline_keyboard = Keyboard::make()
-            ->inline();
-        foreach ($months as $month)
-            $inline_keyboard->row(Keyboard::inlineButton(["text" => $month, 'callback_data' => '/month-'.$month]));
+//        $months = [];
+//        $timetables = Timetable::query()
+//            ->where('date', '>=', now()->format('Y-m-d 00:00:00'))
+//            ->where('group_id', $this->user->group_id)
+//            ->get();
+//        foreach ($timetables as $timetable){
+//            if (!in_array(Carbon::parse($timetable->date)->monthName,$months))
+//                $months[] = $timetable->date;
+//        }
+//        logger($months);
+//        $inline_keyboard = Keyboard::make()
+//            ->inline();
+//        foreach ($months as $month)
+//            $inline_keyboard->row(Keyboard::inlineButton(["text" => $month, 'callback_data' => '/month-'.$month]));
 
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 1,
-            'reply_markup' => $inline_keyboard,
+//            'reply_markup' => $inline_keyboard,
         ]);
     }
 
