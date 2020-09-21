@@ -249,15 +249,15 @@ class TelegramController extends Controller
                 $months[] = Carbon::parse($timetable->date)->monthName;
         }
         logger($months);
-//        $inline_keyboard = Keyboard::make()
-//            ->inline();
-//        foreach ($months as $month)
-//            $inline_keyboard->row(Keyboard::inlineButton(["text" => $month, 'callback_data' => '/month-'.$month]));
+        $inline_keyboard = Keyboard::make()
+            ->inline();
+        foreach ($months as $month)
+            $inline_keyboard->row(Keyboard::inlineButton(["text" => $month, 'callback_data' => '/month-'.$month]));
 
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 1,
-//            'reply_markup' => $inline_keyboard,
+            'reply_markup' => $inline_keyboard,
         ]);
     }
 
