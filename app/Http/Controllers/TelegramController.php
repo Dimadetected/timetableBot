@@ -303,6 +303,7 @@ class TelegramController extends Controller
 
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
+            'text' => '333',
             'reply_markup' => $inline_keyboard,
         ]);
     }
