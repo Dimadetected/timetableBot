@@ -240,16 +240,15 @@ class TelegramController extends Controller
 
     private function calendar()
     {
-//        $months = [];
-//        $timetables = Timetable::query()
-//            ->where('date', '>=', now()->format('Y-m-d 00:00:00'))
-//            ->where('group_id', $this->user->group_id)
-//            ->get();
-//        foreach ($timetables as $timetable){
-//            if (!in_array(Carbon::parse($timetable->date)->monthName,$months))
-//                $months[] = $timetable->date;
-//        }
-//        logger($months);
+        $months = [];
+        $timetables = Timetable::query()
+            ->where('group_id', $this->user->group_id)
+            ->get();
+        foreach ($timetables as $timetable){
+            if (!in_array(Carbon::parse($timetable->date)->monthName,$months))
+                $months[] = $timetable->date;
+        }
+        logger($months);
 //        $inline_keyboard = Keyboard::make()
 //            ->inline();
 //        foreach ($months as $month)
