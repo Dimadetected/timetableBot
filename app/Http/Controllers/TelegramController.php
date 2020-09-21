@@ -246,7 +246,7 @@ class TelegramController extends Controller
             ->get();
         foreach ($timetables as $timetable){
             if (!in_array(Carbon::parse($timetable->date)->monthName,$months))
-                $months[] = $timetable->date;
+                $months[] = Carbon::parse($timetable->date)->monthName;
         }
         logger($months);
 //        $inline_keyboard = Keyboard::make()
