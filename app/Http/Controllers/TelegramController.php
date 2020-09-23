@@ -125,7 +125,7 @@ class TelegramController extends Controller
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'check',
-            'reply_markup' => \Telegram\Bot\Laravel\Facades\Telegram::replyKeyboardMarkup([
+            'reply_markup' => $this->telegram->replyKeyboardMarkup([
                 'keyboard' => $keyboard,
                 'resize_keyboard' => TRUE,
                 'one_time_keyboard' => FALSE,
