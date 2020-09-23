@@ -118,7 +118,7 @@ class TelegramController extends Controller
             ->pluck('date')->toArray();
         
         $arr = [];
-        for ($i = 0; $i < 31; $i = $i + 2) {
+        for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
                 $arr[] = [
                     Carbon::parse($timetables[$i])->format('Y-m-d'),
