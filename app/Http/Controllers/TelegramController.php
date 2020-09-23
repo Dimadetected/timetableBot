@@ -93,13 +93,13 @@ class TelegramController extends Controller
                     }
                 }
                 switch ($this->text) {
-                    case '/today':
+                    case 'Сегодня':
                         $this->timetableSend(1);
                         break;
-                    case '/tomorrow':
+                    case 'Завтра':
                         $this->timetableSend(2);
                         break;
-                    case  '/calendar':
+                    case  'Календарь':
                         $this->calendar();
                         break;
                 }
@@ -121,7 +121,7 @@ class TelegramController extends Controller
         $response = $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'Выберите действие',
-            'reply_markup' => $this->markup(["1", "2"]),
+            'reply_markup' => $this->markup([["1", "2"]]),
         ]);
         
         $inline_keyboard = Keyboard::make()->inline();
@@ -153,7 +153,7 @@ class TelegramController extends Controller
     private function markup($buttons){
         return json_encode(
             ['keyboard' =>
-                [$buttons],
+                $buttons,
                 "one_time_keyboard" => TRUE,
                 "resize_keyboard" => TRUE,
             ]
@@ -161,15 +161,11 @@ class TelegramController extends Controller
     }
     public function showMenu($info = NULL)
     {
-        
-        $inline_keyboard = Keyboard::make()
-            ->inline()
-            ->row(
-                Keyboard::inlineButton(["text" => "Сегодня", 'callback_data' => '/today']),
-                Keyboard::inlineButton(["text" => "Завтра", 'callback_data' => '/tomorrow'])
-            );
+        $inline_keyboard = $this->markup([['Сегодня','Завтра'],['Календарь']]);
         if ($this->chat_id == 541726137)
-            $inline_keyboard->row(
+            $inline_keyboard = $this->markup(['Сегодня','Завтра']);
+    
+        $inline_keyboard->row(
                 Keyboard::inlineButton(["text" => "Календарь", 'callback_data' => '/calendar'])
             );
         
