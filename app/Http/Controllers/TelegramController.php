@@ -82,13 +82,10 @@ class TelegramController extends Controller
                     $carb = Carbon::parse('2020-01-01');
                     if (isset($date[1])) {
                         for ($i = 0; $i < 12; $i++) {
-                            $this->sendMessage($date[1]);
-                            $this->sendMessage($carb->copy()->monthName);
-                            if ($carb->copy()->monthName == $date[1]) {
-                                $this->calendarMonth($carb->copy()->format('m'));
+                            if ($carb->copy()->addMonths($i)->monthName == $date[1]) {
+                                $this->calendarMonth($carb->copy()->addMonths($i)->format('m'));
                                 break;
                             }
-                            $carb->addMonths($i);
                         }
                         return 200;
                     }
