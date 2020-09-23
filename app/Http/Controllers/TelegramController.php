@@ -118,37 +118,30 @@ class TelegramController extends Controller
             ->orderBy('date','asc')
             ->pluck('date');
         $inline_keyboard = Keyboard::make()->inline();
-        $buttons = [];
+        
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
-                $buttons[] = [Carbon::parse($timetables[$i])->format('d'),Carbon::parse($timetables[$i+1])->format('d'),Carbon::parse($timetables[$i+2])->format('d')];
-//                $inline_keyboard->row(
-//                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
-//                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')]),
-//                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 2])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 2])->format('Y-m-d')])
-//                );
+                $inline_keyboard->row(
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')]),
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 2])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 2])->format('Y-m-d')])
+                );
             } elseif (isset($timetables[$i]) and isset($timetables[$i + 1])) {
-                $buttons[] = [Carbon::parse($timetables[$i])->format('d'),Carbon::parse($timetables[$i+1])->format('d')];
-//                $inline_keyboard->row(
-//                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
-//                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')])
-//                );
+                $inline_keyboard->row(
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')])
+                );
             } elseif (isset($timetables[$i])) {
-                $buttons[] = [Carbon::parse($timetables[$i])->format('d')];
-//                $inline_keyboard->row(
-//                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')])
-//                );
+                $inline_keyboard->row(
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')])
+                );
             }
         }
-        $reply_markup = $this->telegram->replyKeyboardMarkup([
-            'keyboard' => $buttons,
-            'resize_keyboard' => true,
-            'one_time_keyboard' => true
-        ]);
+        
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'Выберите день',
-            'reply_markup' => $reply_markup,
+            'reply_markup' => $inline_keyboard,
         ]);
     }
 
