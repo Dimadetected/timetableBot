@@ -10,7 +10,6 @@ use App\Models\RedBtnUser;
 use App\Models\Timetable;
 use App\Telegram;
 use Carbon\Carbon;
-use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Telegram\Bot\Api;
 use Telegram\Bot\Keyboard\Keyboard;
@@ -38,6 +37,9 @@ class TelegramController extends Controller
 
     public function handleRequest(Request $request)
     {
+        
+        
+        
         if (isset($request['callback_query']))
             logger($request['callback_query']);
 
@@ -118,16 +120,6 @@ class TelegramController extends Controller
             ->orderBy('date','asc')
             ->pluck('date');
     
-        $inline_keyboard = Keyboard::button([
-            1,2,3
-        ]);
-    
-        $this->telegram->sendMessage([
-            'chat_id' => $this->chat_id,
-            'text' => 'Тест кнопок',
-            'reply_markup' => $inline_keyboard,
-        ]);
-        
         $inline_keyboard = Keyboard::make()->inline();
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
