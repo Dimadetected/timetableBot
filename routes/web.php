@@ -20,6 +20,7 @@ Route::get('/setWebHook', 'TelegramController@setWebHook');
 Route::post('/' . config('telegram.bots.redBtn.token') . '/webhook', 'TelegramController@redBtnBot');
 
 Route::get('/tel', 'TelegramController@timetableSend')->name('timetableSend');
+Route::get('/sendAllUsers', 'TelegramController@sendAllUsers')->name('sendAllUsers');
 Route::get('/sendAll', 'TelegramController@sendAll')->name('sendAll');
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 

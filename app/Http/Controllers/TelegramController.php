@@ -9,6 +9,7 @@ use App\Models\RedBtnQuestion;
 use App\Models\RedBtnUser;
 use App\Models\Timetable;
 use App\Telegram;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Telegram\Bot\Api;
@@ -33,6 +34,18 @@ class TelegramController extends Controller
     public function __construct()
     {
         $this->telegram = new Api(config('telegram.bots.mybot.token'));
+    }
+    
+    public function sendAllUsers()
+    {
+        $users = User::query()->whereNotNull('tg_id')->get();
+        foreach ($users as $user)
+            $this->telegram->sendMessage([
+                'chat_id' => $user->tg_id,
+                'text' => 'Всем привет! У нас вышло новое обновление, не теряй возможности его увидеть! Список нововведений:' . PHP_EOL .
+                    '1) Обновлены все кнопки на более удобные.' . PHP_EOL .
+                    '2) Добавлен календарь с выбором любой даты текущего семестра.',
+            ]);
     }
     
     public function handleRequest(Request $request)
@@ -74,8 +87,8 @@ class TelegramController extends Controller
                 }
                 
                 if (stristr($this->text, '.')) {
-                    if (Carbon::parse($this->text.'.2020'))
-                        $this->timetableSend($this->text.'.2020');
+                    if (Carbon::parse($this->text . '.2020'))
+                        $this->timetableSend($this->text . '.2020');
                 }
                 if (stristr($this->text, ':')) {
                     $date = explode(':', $this->text);
@@ -97,6 +110,7 @@ class TelegramController extends Controller
                     case 'Завтра':
                         $this->timetableSend(2);
                         break;
+                    case  'Назад':
                     case  'Календарь':
                         $this->calendar();
                         return 200;
@@ -117,7 +131,7 @@ class TelegramController extends Controller
             ->orderBy('date', 'asc')
             ->pluck('date')->toArray();
         
-        $arr = [];
+        $arr = [['Назад']];
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
                 $arr[] = [
