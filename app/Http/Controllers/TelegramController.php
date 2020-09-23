@@ -74,8 +74,8 @@ class TelegramController extends Controller
                 }
                 
                 if (stristr($this->text, '.')) {
-                    if (Carbon::parse($this->text))
-                        $this->timetableSend($this->text);
+                    if (Carbon::parse($this->text.'.2020'))
+                        $this->timetableSend($this->text.'.2020');
                 }
                 if (stristr($this->text, ':')) {
                     $date = explode(':', $this->text);
