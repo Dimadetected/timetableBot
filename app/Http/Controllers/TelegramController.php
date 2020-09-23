@@ -93,13 +93,13 @@ class TelegramController extends Controller
                     }
                 }
                 switch ($this->text) {
-                    case '/today':
+                    case 'Сегодня':
                         $this->timetableSend(1);
                         break;
-                    case '/tomorrow':
+                    case 'Завтра':
                         $this->timetableSend(2);
                         break;
-                    case  '/calendar':
+                    case  'Календарь':
                         $this->calendar();
                         break;
                 }
@@ -150,7 +150,9 @@ class TelegramController extends Controller
             'reply_markup' => 'ReplyKeyboardMarkup',
         ]);
     }
-    private function markup($buttons){
+    
+    private function markup($buttons)
+    {
         return json_encode(
             ['keyboard' =>
                 $buttons,
@@ -159,19 +161,13 @@ class TelegramController extends Controller
             ]
         );
     }
+    
     public function showMenu($info = NULL)
     {
-        $arr = [['Сегодня','Завтра']];
-//        $inline_keyboard = Keyboard::make()
-//            ->inline()
-//            ->row(
-//                Keyboard::inlineButton(["text" => "Сегодня", 'callback_data' => '/today']),
-//                Keyboard::inlineButton(["text" => "Завтра", 'callback_data' => '/tomorrow'])
-//            );
-//        if ($this->chat_id == 541726137)
-//            $inline_keyboard->row(
-//                Keyboard::inlineButton(["text" => "Календарь", 'callback_data' => '/calendar'])
-//            );
+        $arr = [['Сегодня', 'Завтра']];
+
+        if ($this->chat_id == 541726137)
+            $arr = [['Сегодня', 'Завтра'], ['Календарь']];
         
         $message = 'Необходимо выбрать день';
 //        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
