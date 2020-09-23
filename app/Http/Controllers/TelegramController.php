@@ -119,19 +119,18 @@ class TelegramController extends Controller
             ->where('group_id', $this->user->group_id)
             ->orderBy('date','asc')
             ->pluck('date');
-        $inline_keyboard = json_encode([//Because its object
-            'inline_keyboard'=>[
-                [
-                    ['text'=>'', 'callback_data'=>'smth'],
-                    ['text'=>'', 'callback_data'=>'smth2']
-                ],
-            ]
-        ]);
+       
     
         $response = $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'smth',
-            'reply_markup' => $inline_keyboard
+            'reply_markup' => json_encode([
+                array(
+                    'keyboard' => array(
+                        array("A", "B")
+                    )
+                )
+            ])
         ]);
         
     
@@ -158,7 +157,7 @@ class TelegramController extends Controller
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'Выберите день',
-            'reply_markup' => $inline_keyboard,
+            'reply_markup' => 'ReplyKeyboardMarkup',
         ]);
     }
 
