@@ -122,16 +122,14 @@ class TelegramController extends Controller
         $keyboard = [
             ['Продолжить опрос', 'У меня клиент'],
         ];
+        $inline_keyboard = Keyboard::inlineButton($keyboard);
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'check',
-            'reply_markup' => $this->telegram->replyKeyboardMarkup([
-                'keyboard' => $keyboard,
-                'resize_keyboard' => TRUE,
-                'one_time_keyboard' => FALSE,
-            ]),
+            'reply_markup' => $inline_keyboard,
         ]);
         
+    
         $inline_keyboard = Keyboard::make()->inline();
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
