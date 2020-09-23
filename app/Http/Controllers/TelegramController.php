@@ -115,7 +115,7 @@ class TelegramController extends Controller
             ->where('date', 'LIKE', '%-' . $month . '-%')
             ->where('group_id', $this->user->group_id)
             ->orderBy('date', 'asc')
-            ->pluck('date');
+            ->pluck('date')->toArray();
         
         $arr = [];
         for ($i = 0; $i < 31; $i = $i + 2) {
