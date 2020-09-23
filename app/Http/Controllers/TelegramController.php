@@ -119,15 +119,7 @@ class TelegramController extends Controller
             ->where('group_id', $this->user->group_id)
             ->orderBy('date','asc')
             ->pluck('date');
-        $keyboard = [
-            ['Продолжить опрос', 'У меня клиент'],
-        ];
-        $inline_keyboard = Keyboard::inlineButton($keyboard);
-        $this->telegram->sendMessage([
-            'chat_id' => $this->chat_id,
-            'text' => 'check',
-            'reply_markup' => $inline_keyboard,
-        ]);
+       
         
     
         $inline_keyboard = Keyboard::make()->inline();
