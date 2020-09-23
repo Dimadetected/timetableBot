@@ -119,7 +119,20 @@ class TelegramController extends Controller
             ->where('group_id', $this->user->group_id)
             ->orderBy('date','asc')
             ->pluck('date');
-       
+        $inline_keyboard = json_encode([//Because its object
+            'inline_keyboard'=>[
+                [
+                    ['text'=>'', 'callback_data'=>'smth'],
+                    ['text'=>'', 'callback_data'=>'smth2']
+                ],
+            ]
+        ]);
+    
+        $response = $this->telegram->sendMessage([
+            'chat_id' => $this->chat_id,
+            'text' => 'smth',
+            'reply_markup' => $inline_keyboard
+        ]);
         
     
         $inline_keyboard = Keyboard::make()->inline();
