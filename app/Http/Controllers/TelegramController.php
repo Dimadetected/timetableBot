@@ -82,6 +82,7 @@ class TelegramController extends Controller
                 if (stristr($this->text, ':')) {
                     $date = explode(':', $this->text);
                     $carb = Carbon::parse('2020-01-01');
+                    $this->sendMessage($date[1]);
                     if (isset($date[1])) {
                         for ($i = 0; $i < 12; $i++) {
                             if ($carb->copy()->monthName == $date[1]) {
