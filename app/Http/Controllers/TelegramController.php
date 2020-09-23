@@ -117,8 +117,18 @@ class TelegramController extends Controller
             ->where('group_id', $this->user->group_id)
             ->orderBy('date','asc')
             ->pluck('date');
-        $inline_keyboard = Keyboard::make()->inline();
+    
+        $inline_keyboard = Keyboard::button([
+            1,2,3
+        ]);
+    
+        $this->telegram->sendMessage([
+            'chat_id' => $this->chat_id,
+            'text' => 'Тест кнопок',
+            'reply_markup' => $inline_keyboard,
+        ]);
         
+        $inline_keyboard = Keyboard::make()->inline();
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
                 $inline_keyboard->row(
