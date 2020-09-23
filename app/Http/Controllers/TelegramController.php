@@ -121,7 +121,7 @@ class TelegramController extends Controller
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
                 $arr[] = [
-                    Carbon::parse($timetables[$i])->format('m.d'),
+                    Carbon::parse($timetables[$i])->format('d.m'),
                     Carbon::parse($timetables[$i + 1])->format('d.m'),
                     Carbon::parse($timetables[$i + 2])->format('d.m'),
                 ];
