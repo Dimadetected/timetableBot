@@ -73,7 +73,7 @@ class TelegramController extends Controller
                     $this->sendMessage('Рад помочь!');
                 }
                 
-                if (stristr($this->text, '-')) {
+                if (stristr($this->text, '.')) {
                     if (Carbon::parse($this->text))
                         $this->timetableSend($this->text);
                 }
@@ -121,17 +121,17 @@ class TelegramController extends Controller
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
                 $arr[] = [
-                    Carbon::parse($timetables[$i])->format('Y-m-d'),
-                    Carbon::parse($timetables[$i + 1])->format('Y-m-d'),
-                    Carbon::parse($timetables[$i + 2])->format('Y-m-d'),
+                    Carbon::parse($timetables[$i])->format('m.d'),
+                    Carbon::parse($timetables[$i + 1])->format('m.d'),
+                    Carbon::parse($timetables[$i + 2])->format('m.d'),
                 ];
             } elseif (isset($timetables[$i]) and isset($timetables[$i + 1])) {
                 $arr[] = [
-                    Carbon::parse($timetables[$i])->format('Y-m-d'),
-                    Carbon::parse($timetables[$i + 1])->format('Y-m-d'),
+                    Carbon::parse($timetables[$i])->format('m.d'),
+                    Carbon::parse($timetables[$i + 1])->format('m.d'),
                 ];
             } elseif (isset($timetables[$i])) {
-                $arr[] = [Carbon::parse($timetables[$i])->format('Y-m-d')];
+                $arr[] = [Carbon::parse($timetables[$i])->format('m.d')];
             }
         }
         
@@ -155,10 +155,7 @@ class TelegramController extends Controller
     
     public function showMenu($info = NULL)
     {
-        $arr = [['Сегодня', 'Завтра']];
-        
-        if ($this->chat_id == 541726137)
-            $arr = [['Сегодня', 'Завтра'], ['Календарь']];
+        $arr = [['Сегодня', 'Завтра'], ['Календарь']];
         
         $message = 'Необходимо выбрать день';
 //        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
