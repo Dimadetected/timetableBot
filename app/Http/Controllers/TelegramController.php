@@ -120,7 +120,6 @@ class TelegramController extends Controller
         
         $response = $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
-            'text' => 'smth',
             'reply_markup' => json_encode(
                 ['keyboard' =>
                     [["1", "2"]],
