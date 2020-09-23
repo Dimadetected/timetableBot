@@ -165,9 +165,6 @@ class TelegramController extends Controller
         if ($this->chat_id == 541726137)
             $inline_keyboard = $this->markup(['Сегодня','Завтра']);
     
-        $inline_keyboard->row(
-                Keyboard::inlineButton(["text" => "Календарь", 'callback_data' => '/calendar'])
-            );
         
         $message = 'Необходимо выбрать день';
 //        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
