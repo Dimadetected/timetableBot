@@ -120,13 +120,7 @@ class TelegramController extends Controller
             ->orderBy('date', 'asc')
             ->pluck('date');
         
-        $response = $this->telegram->sendMessage([
-            'chat_id' => $this->chat_id,
-            'text' => 'Выберите действие',
-            'reply_markup' => $this->markup([["3", "4"]]),
-        ]);
         $arr = [];
-        $inline_keyboard = Keyboard::make()->inline();
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
                 $arr[] = [
