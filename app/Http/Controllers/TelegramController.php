@@ -122,8 +122,11 @@ class TelegramController extends Controller
             'chat_id' => $this->chat_id,
             'text' => 'smth',
             'reply_markup' => json_encode(
-                ['keyboard' =>
-                [[["A", "B"]]]]
+                [
+                    'keyboard' =>
+                        [[["A", "B"]]],
+                    "one_time_keyboard" => TRUE,
+                ]
             ),
         ]);
         
