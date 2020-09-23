@@ -18,7 +18,6 @@ use Telegram\Bot\Keyboard\Keyboard;
 class TelegramController extends Controller
 {
     protected $telegram;
-    protected $redBtnBot;
     protected $chat_id;
     protected $text;
     protected $user;
@@ -35,59 +34,6 @@ class TelegramController extends Controller
     public function __construct()
     {
         $this->telegram = new Api(config('telegram.bots.mybot.token'));
-        $this->redBtnBot = new Api(config('telegram.bots.redBtn.token'));
-    }
-
-    public function getMe()
-    {
-        foreach (json_decode(file_get_contents(public_path('stages.json')), true) as $key => $arr)
-            if (isset($arr['message']))
-                RedBtnQuestion::query()->updateOrCreate([
-                    'step' => $key
-                ], [
-                    'text' => $arr['message']
-                ]);
-        $response = $this->redBtnBot->getMe();
-        return $response;
-    }
-
-    public function setWebHook()
-    {
-        $url = 'https://kubsu.4wr.ru/' . config('telegram.bots.redBtn.token') . '/webhook';
-        $response = $this->redBtnBot->setWebhook(['url' => $url]);
-
-        return $response == TRUE ? $response : dd($response);
-    }
-
-    public function redBtnBot(Request $request)
-    {
-        $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
-        $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
-        logger($request['message']);
-        $user = RedBtnUser::query()->firstOrCreate(['tg_id' => $this->chat_id], ['step' => 0]);
-        $question = RedBtnQuestion::query()->where('step', $user->step)->first();
-
-        logger($user);
-        logger($question);
-        if (isset($request['callback_query']))
-            logger($request['callback_query']);
-
-        $inline_keyboard = Keyboard::make()
-            ->inline()
-            ->row(
-                Keyboard::inlineButton(["text" => "Кнопка Красная", 'callback_data' => 'Кнопка'])
-            );
-
-        $this->redBtnBot->sendMessage([
-            'chat_id' => $this->chat_id,
-            'text' => $question->text,
-            'reply_markup' => $inline_keyboard
-        ]);
-        $user->step = $question->step + 1;
-        $user->msg_id = $request['message']['message_id'] ?? $request['callback_query']['message']['message_id'];
-        $user->save();
-
-        return 200;
     }
 
     public function handleRequest(Request $request)
@@ -97,6 +43,7 @@ class TelegramController extends Controller
 
         logger($request['message']);
         $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
+        
         if (!isset($request['message']['text']) and !isset($request['callback_query']['data']))
             return 200;
         $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
@@ -170,26 +117,27 @@ class TelegramController extends Controller
             ->where('group_id', $this->user->group_id)
             ->orderBy('date','asc')
             ->pluck('date');
-        $inline_keyboard = Keyboard::make()
-            ->inline();
+        $inline_keyboard = Keyboard::make()->inline();
+        
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
                 $inline_keyboard->row(
-                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
-                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')]),
-                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i + 2])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 2])->format('Y-m-d')])
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')]),
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 2])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 2])->format('Y-m-d')])
                 );
             } elseif (isset($timetables[$i]) and isset($timetables[$i + 1])) {
                 $inline_keyboard->row(
-                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
-                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')])
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')])
                 );
             } elseif (isset($timetables[$i])) {
                 $inline_keyboard->row(
-                    Keyboard::inlineButton(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')])
+                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')])
                 );
             }
         }
+        
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'Выберите день',
