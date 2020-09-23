@@ -73,14 +73,14 @@ class TelegramController extends Controller
                     $this->sendMessage('Рад помочь!');
                 }
                 
-                if (stristr($this->text, '/date')) {
+                if (stristr($this->text, '-')) {
                     $date = explode(' ', $this->text);
                     if (isset($date[1])) {
                         $this->timetableSend($date[1]);
                     }
                 }
-                if (stristr($this->text, '-')) {
-                    $date = explode('-', $this->text);
+                if (stristr($this->text, ':')) {
+                    $date = explode(':', $this->text);
                     $carb = Carbon::parse('2020-01-01');
                     if (isset($date[1])) {
                         for ($i = 0; $i < 12; $i++) {
@@ -90,6 +90,7 @@ class TelegramController extends Controller
                             }
                             $carb->addMonths($i);
                         }
+                        return 200;
                     }
                 }
                 switch ($this->text) {
@@ -101,6 +102,7 @@ class TelegramController extends Controller
                         break;
                     case  'Календарь':
                         $this->calendar();
+                        return 200;
                         break;
                 }
                 $this->showMenu();
@@ -123,31 +125,29 @@ class TelegramController extends Controller
             'text' => 'Выберите действие',
             'reply_markup' => $this->markup([["3", "4"]]),
         ]);
-        
+        $arr = [];
         $inline_keyboard = Keyboard::make()->inline();
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
-                $inline_keyboard->row(
-                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
-                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')]),
-                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 2])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 2])->format('Y-m-d')])
-                );
+                $arr[] = [
+                    Carbon::parse($timetables[$i])->format('Y-m-d'),
+                    Carbon::parse($timetables[$i + 1])->format('Y-m-d'),
+                    Carbon::parse($timetables[$i + 2])->format('Y-m-d')
+                ];
             } elseif (isset($timetables[$i]) and isset($timetables[$i + 1])) {
-                $inline_keyboard->row(
-                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')]),
-                    Keyboard::button(["text" => Carbon::parse($timetables[$i + 1])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i + 1])->format('Y-m-d')])
-                );
+                $arr[] = [
+                    Carbon::parse($timetables[$i])->format('Y-m-d'),
+                    Carbon::parse($timetables[$i + 1])->format('Y-m-d'),
+                    ];
             } elseif (isset($timetables[$i])) {
-                $inline_keyboard->row(
-                    Keyboard::button(["text" => Carbon::parse($timetables[$i])->format('d'), 'callback_data' => '/date ' . Carbon::parse($timetables[$i])->format('Y-m-d')])
-                );
+                $arr[] = [Carbon::parse($timetables[$i])->format('Y-m-d')];
             }
         }
         
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'Выберите день',
-            'reply_markup' => 'ReplyKeyboardMarkup',
+            'reply_markup' => $this->markup($arr),
         ]);
     }
     
@@ -165,7 +165,7 @@ class TelegramController extends Controller
     public function showMenu($info = NULL)
     {
         $arr = [['Сегодня', 'Завтра']];
-
+        
         if ($this->chat_id == 541726137)
             $arr = [['Сегодня', 'Завтра'], ['Календарь']];
         
@@ -254,15 +254,15 @@ class TelegramController extends Controller
                 $months[] = Carbon::parse($timetable->date)->monthName;
         }
         logger($months);
-        $inline_keyboard = Keyboard::make()
-            ->inline();
+        $arr = [];
+        
         foreach ($months as $month)
-            $inline_keyboard->row(Keyboard::inlineButton(["text" => $month, 'callback_data' => '/month-' . $month]));
+            $arr[] = ['Месяц:' . $month];
         
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'Выберите месяц',
-            'reply_markup' => $inline_keyboard,
+            'reply_markup' => $this->markup($arr),
         ]);
     }
     
