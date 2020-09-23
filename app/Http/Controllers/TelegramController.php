@@ -29,27 +29,25 @@ class TelegramController extends Controller
         '6' => 'суббота',
         '0' => 'воскресенье',
     ];
-
+    
     public function __construct()
     {
         $this->telegram = new Api(config('telegram.bots.mybot.token'));
     }
-
+    
     public function handleRequest(Request $request)
     {
         
-        
-        
         if (isset($request['callback_query']))
             logger($request['callback_query']);
-
+        
         logger($request['message']);
         $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
         
         if (!isset($request['message']['text']) and !isset($request['callback_query']['data']))
             return 200;
         $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
-
+        
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
         ], [
@@ -58,7 +56,7 @@ class TelegramController extends Controller
             'password' => bcrypt(1),
         ]);
         file_put_contents(public_path('request.json'), json_encode($request['message']));
-
+        
         $this->user = $user;
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
@@ -74,7 +72,7 @@ class TelegramController extends Controller
                 if (stristr(strtolower($this->text), 'асибо')) {
                     $this->sendMessage('Рад помочь!');
                 }
-
+                
                 if (stristr($this->text, '/date')) {
                     $date = explode(' ', $this->text);
                     if (isset($date[1])) {
@@ -106,34 +104,35 @@ class TelegramController extends Controller
                         break;
                 }
                 $this->showMenu();
-
+                
             }
         }
         return 200;
     }
-
+    
     private function calendarMonth($month)
     {
         $timetables = Timetable::query()
             ->where('date', 'LIKE', '%-' . $month . '-%')
             ->where('group_id', $this->user->group_id)
-            ->orderBy('date','asc')
+            ->orderBy('date', 'asc')
             ->pluck('date');
-       
-    
+        
         $response = $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'smth',
             'reply_markup' => json_encode(
-                array(
-                    'keyboard' => array(
-                        array("A", "B")
-                    )
-                )
-            )
+                [
+                    'keyboard' =>
+                        [
+                            [array("A", "B")],
+                        ],
+                    "resize_keyboard" => true,
+                    "one_time_keyboard" => true
+                ]
+            ),
         ]);
         
-    
         $inline_keyboard = Keyboard::make()->inline();
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
@@ -160,10 +159,10 @@ class TelegramController extends Controller
             'reply_markup' => 'ReplyKeyboardMarkup',
         ]);
     }
-
+    
     public function showMenu($info = NULL)
     {
-
+        
         $inline_keyboard = Keyboard::make()
             ->inline()
             ->row(
@@ -174,24 +173,24 @@ class TelegramController extends Controller
             $inline_keyboard->row(
                 Keyboard::inlineButton(["text" => "Календарь", 'callback_data' => '/calendar'])
             );
-
+        
         $message = 'Необходимо выбрать день';
 //        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
-
+        
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => $message,
             'reply_markup' => $inline_keyboard,
         ]);
     }
-
+    
     public function newUser()
     {
         $message = 'Привет. Скоро твой аккаунт подтвердят и ты будешь получать расписание!';
-
+        
         $this->sendMessage($message);
     }
-
+    
     protected function sendMessage($message, $parse_html = FALSE)
     {
         try {
@@ -199,19 +198,19 @@ class TelegramController extends Controller
                 'chat_id' => $this->chat_id,
                 'text' => $message,
             ];
-
+            
             if ($parse_html) $data['parse_mode'] = 'HTML';
-
+            
             $this->telegram->sendMessage($data);
         } catch (\Exception $e) {
             $this->telegram->sendMessage([
                 'chat_id' => '541726137',
                 'text' => $e->getMessage(),
             ]);
-
+            
         }
     }
-
+    
     public function timetableSend($flag)
     {
         if ($flag === 1) {
@@ -241,14 +240,14 @@ class TelegramController extends Controller
         } else {
             $message = 'Выходной';
         }
-
+        
         $this->telegram->sendMessage([
                 'chat_id' => $tg_id ?? $this->chat_id,
                 'text' => $startMessage . ' ' . $message,
             ]
         );
     }
-
+    
     private function calendar()
     {
         $months = [];
@@ -264,14 +263,14 @@ class TelegramController extends Controller
             ->inline();
         foreach ($months as $month)
             $inline_keyboard->row(Keyboard::inlineButton(["text" => $month, 'callback_data' => '/month-' . $month]));
-
+        
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'Выберите месяц',
             'reply_markup' => $inline_keyboard,
         ]);
     }
-
+    
     public function sendAll()
     {
         ;
@@ -281,20 +280,20 @@ class TelegramController extends Controller
             $this->timetableSend(\request('flag', 1));
         }
     }
-
+    
     public function start()
     {
         TimetableNoticeStart::handle();
     }
-
+    
     public function end()
     {
         TimetableNoticeEnd::handle();
     }
-
+    
     public function create()
     {
         TimetableCreate::handle();
     }
-
+    
 }
