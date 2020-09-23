@@ -119,7 +119,19 @@ class TelegramController extends Controller
             ->where('group_id', $this->user->group_id)
             ->orderBy('date','asc')
             ->pluck('date');
-    
+        $keyboard = [
+            ['Продолжить опрос', 'У меня клиент'],
+        ];
+        $this->telegram->sendMessage([
+            'chat_id' => $this->chat_id,
+            'text' => 'check',
+            'reply_markup' => \Telegram\Bot\Laravel\Facades\Telegram::replyKeyboardMarkup([
+                'keyboard' => $keyboard,
+                'resize_keyboard' => TRUE,
+                'one_time_keyboard' => FALSE,
+            ]),
+        ]);
+        
         $inline_keyboard = Keyboard::make()->inline();
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
