@@ -74,10 +74,7 @@ class TelegramController extends Controller
                 }
                 
                 if (stristr($this->text, '-')) {
-                    $date = explode(' ', $this->text);
-                    if (isset($date[1])) {
-                        $this->timetableSend($date[1]);
-                    }
+                    $this->timetableSend($this->text);
                 }
                 if (stristr($this->text, ':')) {
                     $date = explode(':', $this->text);
@@ -127,13 +124,13 @@ class TelegramController extends Controller
                 $arr[] = [
                     Carbon::parse($timetables[$i])->format('Y-m-d'),
                     Carbon::parse($timetables[$i + 1])->format('Y-m-d'),
-                    Carbon::parse($timetables[$i + 2])->format('Y-m-d')
+                    Carbon::parse($timetables[$i + 2])->format('Y-m-d'),
                 ];
             } elseif (isset($timetables[$i]) and isset($timetables[$i + 1])) {
                 $arr[] = [
                     Carbon::parse($timetables[$i])->format('Y-m-d'),
                     Carbon::parse($timetables[$i + 1])->format('Y-m-d'),
-                    ];
+                ];
             } elseif (isset($timetables[$i])) {
                 $arr[] = [Carbon::parse($timetables[$i])->format('Y-m-d')];
             }
