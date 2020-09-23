@@ -123,7 +123,10 @@ class TelegramController extends Controller
             'text' => 'smth',
             'reply_markup' => json_encode(
                 ['keyboard' =>
-                    [array("A", "B")]]
+                    [["A", "B"]],
+                    "one_time_keyboard" => TRUE,
+                    "resize_keyboard" => TRUE,
+                ]
             ),
         ]);
         
