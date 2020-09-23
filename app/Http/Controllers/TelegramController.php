@@ -121,7 +121,7 @@ class TelegramController extends Controller
         $response = $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'Выберите действие',
-            'reply_markup' => $this->markup(["1", "2"]),
+            'reply_markup' => $this->markup([["1", "2"]]),
         ]);
         
         $inline_keyboard = Keyboard::make()->inline();
@@ -153,7 +153,7 @@ class TelegramController extends Controller
     private function markup($buttons){
         return json_encode(
             ['keyboard' =>
-                [$buttons],
+                $buttons,
                 "one_time_keyboard" => TRUE,
                 "resize_keyboard" => TRUE,
             ]
