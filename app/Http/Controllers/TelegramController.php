@@ -112,6 +112,10 @@ class TelegramController extends Controller
             if (is_null($user->group_id)) {
                 $this->newUser();
             } else {
+
+                if(stristr($this->text,'.pdf'))
+                    return 200;
+
                 if (stristr(strtolower($this->text), 'асибо')) {
                     $this->sendMessage('Рад помочь!');
                 }
