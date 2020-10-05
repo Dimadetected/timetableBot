@@ -34,7 +34,7 @@ class TelegramController extends Controller
     public function __construct()
     {
         $this->telegram = new Api(config('telegram.bots.mybot.token'));
-        $this->redBtnBot = new Api(config('telegram.bots.mybot.redBtn'));
+        $this->redBtnBot = new Api(config('telegram.bots.redBtn.token'));
     }
     public function redBtnBot(Request $request)
     {
