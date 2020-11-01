@@ -38,7 +38,7 @@ class TelegramService
             'url' => $url
         ]);
 
-        return $response == TRUE ? $response : dd($response->body());
+        return $response;
     }
 
 

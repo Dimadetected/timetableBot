@@ -39,7 +39,7 @@ class TelegramController extends Controller
     
     public function setWebHook()
     {
-        $this->telegramSecond->setWebHook();
+        dd($this->telegramSecond->setWebHook());
     }
     
     public function __construct()
