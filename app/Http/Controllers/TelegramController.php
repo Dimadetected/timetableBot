@@ -8,6 +8,7 @@ use App\Jobs\TimetableNoticeStart;
 use App\Models\RedBtnQuestion;
 use App\Models\RedBtnUser;
 use App\Models\Timetable;
+use App\Services\TelegramService;
 use App\Telegram;
 use App\User;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ use Telegram\Bot\Keyboard\Keyboard;
 
 class TelegramController extends Controller
 {
-    protected $telegram,$redBtnBot;
+    protected $telegram,$redBtnBot,$telegramSecond;
     protected $chat_id;
     protected $text;
     protected $user;
@@ -30,11 +31,23 @@ class TelegramController extends Controller
         '6' => 'суббота',
         '0' => 'воскресенье',
     ];
-
+    
+    public function getMe()
+    {
+        dd($this->telegramSecond->getMe());
+    }
+    
+    public function setWebHook()
+    {
+        $this->telegramSecond->setWebHook();
+    }
+    
     public function __construct()
     {
         $this->telegram = new Api(config('telegram.bots.mybot.token'));
         $this->redBtnBot = new Api(config('telegram.bots.redBtn.token'));
+        $this->telegramSecond = new TelegramService(config('telegram.bot_token'));
+    
     }
     public function redBtnBot(Request $request)
     {
