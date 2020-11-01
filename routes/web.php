@@ -16,7 +16,7 @@ use \Illuminate\Support\Facades\Auth;
 
 Route::post('/' . config('telegram.bots.redBtn.token') . '/webhook', 'TelegramController@redBtnBot');
 Route::post('/' . config('telegram.bots.mybot.token') . '/webhook', 'TelegramController@handleRequest');
-Route::get('/deleteWebhook', 'TelegramController@getMe');
+Route::get('/deleteWebhook', 'TelegramController@deleteWebhook');
 Route::get('/getMe', 'TelegramController@getMe');
 Route::get('/setWebHook', 'TelegramController@setWebHook');
 
