@@ -17,7 +17,7 @@ use Telegram\Bot\Keyboard\Keyboard;
 
 class TelegramController extends Controller
 {
-    protected $telegram;
+    protected $telegram,$redBtnBot;
     protected $chat_id;
     protected $text;
     protected $user;
@@ -30,12 +30,42 @@ class TelegramController extends Controller
         '6' => 'суббота',
         '0' => 'воскресенье',
     ];
-    
+
     public function __construct()
     {
         $this->telegram = new Api(config('telegram.bots.mybot.token'));
+        $this->redBtnBot = new Api(config('telegram.bots.redBtn.token'));
     }
-    
+    public function redBtnBot(Request $request)
+    {
+        $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
+        $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
+        logger($request['message']);
+        $user = RedBtnUser::query()->firstOrCreate(['tg_id' => $this->chat_id], ['step' => 0]);
+        $question = RedBtnQuestion::query()->where('step', $user->step)->first();
+
+        logger($user);
+        logger($question);
+        if (isset($request['callback_query']))
+            logger($request['callback_query']);
+
+        $inline_keyboard = Keyboard::make()
+            ->inline()
+            ->row(
+                Keyboard::inlineButton(["text" => "Кнопка Красная", 'callback_data' => 'Кнопка'])
+            );
+
+        $this->redBtnBot->sendMessage([
+            'chat_id' => $this->chat_id,
+            'text' => $question->text,
+            'reply_markup' => $inline_keyboard
+        ]);
+        $user->step = $question->step + 1;
+        $user->msg_id = $request['message']['message_id'] ?? $request['callback_query']['message']['message_id'];
+        $user->save();
+
+        return 200;
+    }
     public function sendAllUsers()
     {
         $users = User::query()->whereNotNull('tg_id')->get();
@@ -47,20 +77,20 @@ class TelegramController extends Controller
                     '2) Добавлен календарь с выбором любой даты текущего семестра.',
             ]);
     }
-    
+
     public function handleRequest(Request $request)
     {
-        
+
         if (isset($request['callback_query']))
             logger($request['callback_query']);
-        
+
         logger($request['message']);
         $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
-        
+
         if (!isset($request['message']['text']) and !isset($request['callback_query']['data']))
             return 200;
         $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
-        
+
         $user = \App\User::query()->firstOrCreate([
             'tg_id' => $this->chat_id,
         ], [
@@ -69,7 +99,7 @@ class TelegramController extends Controller
             'password' => bcrypt(1),
         ]);
         file_put_contents(public_path('request.json'), json_encode($request['message']));
-        
+
         $this->user = $user;
         if ($user->name == 'Ждем имя') {
             if (is_null($user->remember_token)) {
@@ -82,10 +112,14 @@ class TelegramController extends Controller
             if (is_null($user->group_id)) {
                 $this->newUser();
             } else {
+
+                if(stristr($this->text,'.pdf'))
+                    return 200;
+
                 if (stristr(strtolower($this->text), 'асибо')) {
                     $this->sendMessage('Рад помочь!');
                 }
-                
+
                 if (stristr($this->text, '.')) {
                     if (Carbon::parse($this->text . '.2020'))
                         $this->timetableSend($this->text . '.2020');
@@ -117,12 +151,12 @@ class TelegramController extends Controller
                         break;
                 }
                 $this->showMenu();
-                
+
             }
         }
         return 200;
     }
-    
+
     private function calendarMonth($month)
     {
         $timetables = Timetable::query()
@@ -130,7 +164,7 @@ class TelegramController extends Controller
             ->where('group_id', $this->user->group_id)
             ->orderBy('date', 'asc')
             ->pluck('date')->toArray();
-        
+
         $arr = [['Назад']];
         for ($i = 0; $i < 31; $i = $i + 3) {
             if (isset($timetables[$i]) and isset($timetables[$i + 1]) and isset($timetables[$i + 2])) {
@@ -148,14 +182,14 @@ class TelegramController extends Controller
                 $arr[] = [Carbon::parse($timetables[$i])->format('d.m')];
             }
         }
-        
+
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'Выберите день',
             'reply_markup' => $this->markup($arr),
         ]);
     }
-    
+
     private function markup($buttons)
     {
         return json_encode(
@@ -166,28 +200,28 @@ class TelegramController extends Controller
             ]
         );
     }
-    
+
     public function showMenu($info = NULL)
     {
         $arr = [['Сегодня', 'Завтра'], ['Календарь']];
-        
+
         $message = 'Необходимо выбрать день';
 //        $message .= 'Также можно выбрать необходимую вам дату при помощи /date и через пробел дату: ' . PHP_EOL . '/date ' . now()->format('d.m.Y') . chr(10);
-        
+
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => $message,
             'reply_markup' => $this->markup($arr),
         ]);
     }
-    
+
     public function newUser()
     {
         $message = 'Привет. Скоро твой аккаунт подтвердят и ты будешь получать расписание!';
-        
+
         $this->sendMessage($message);
     }
-    
+
     protected function sendMessage($message, $parse_html = FALSE)
     {
         try {
@@ -195,19 +229,19 @@ class TelegramController extends Controller
                 'chat_id' => $this->chat_id,
                 'text' => $message,
             ];
-            
+
             if ($parse_html) $data['parse_mode'] = 'HTML';
-            
+
             $this->telegram->sendMessage($data);
         } catch (\Exception $e) {
             $this->telegram->sendMessage([
                 'chat_id' => '541726137',
                 'text' => $e->getMessage(),
             ]);
-            
+
         }
     }
-    
+
     public function timetableSend($flag)
     {
         if ($flag === 1) {
@@ -237,14 +271,14 @@ class TelegramController extends Controller
         } else {
             $message = 'Выходной';
         }
-        
+
         $this->telegram->sendMessage([
                 'chat_id' => $tg_id ?? $this->chat_id,
                 'text' => $startMessage . ' ' . $message,
             ]
         );
     }
-    
+
     private function calendar()
     {
         $months = [];
@@ -257,17 +291,17 @@ class TelegramController extends Controller
         }
         logger($months);
         $arr = [];
-        
+
         foreach ($months as $month)
             $arr[] = ['Месяц:' . $month];
-        
+
         $this->telegram->sendMessage([
             'chat_id' => $this->chat_id,
             'text' => 'Выберите месяц',
             'reply_markup' => $this->markup($arr),
         ]);
     }
-    
+
     public function sendAll()
     {
         ;
@@ -277,20 +311,20 @@ class TelegramController extends Controller
             $this->timetableSend(\request('flag', 1));
         }
     }
-    
+
     public function start()
     {
         TimetableNoticeStart::handle();
     }
-    
+
     public function end()
     {
         TimetableNoticeEnd::handle();
     }
-    
+
     public function create()
     {
         TimetableCreate::handle();
     }
-    
+
 }
