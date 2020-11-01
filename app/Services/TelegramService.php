@@ -33,11 +33,14 @@ class TelegramService
      */
     public function setWebHook()
     {
+        
         $url = 'http://kubsubot.ru/' . $this->token . '/webhook';
+        dump($url);
+        dump($this->url . '/setWebhook');
         $response = Http::get($this->url . '/setWebhook', [
             'url' => $url
         ]);
-
+        dump($response->body());
         return $response->body();
     }
 
