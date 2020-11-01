@@ -5,7 +5,7 @@ namespace App\Services;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 
-class TelegramService extends BaseService
+class TelegramService
 {
 
     private $token, $url;
