@@ -37,6 +37,9 @@ class TelegramController extends Controller
         dd($this->telegramSecond->getMe());
     }
     
+    public function deleteWebhook(){
+        dd($this->telegram->removeWebhook());
+    }
     public function setWebHook()
     {
         dd($this->telegramSecond->setWebHook());
