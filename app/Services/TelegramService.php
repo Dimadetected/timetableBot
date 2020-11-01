@@ -38,7 +38,7 @@ class TelegramService
             'url' => $url
         ]);
 
-        return $response;
+        return $response->body();
     }
 
 
