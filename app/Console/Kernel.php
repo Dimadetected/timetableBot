@@ -29,10 +29,10 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () {
             TimetableNoticeEnd::handle();
-        })->dailyAt('19:00');
+        })->dailyAt('17:00');
         $schedule->call(function () {
             TimetableNoticeStart::handle();
-        })->everyFiveMinutes();
+        })->dailyAt('05:00');
         $schedule->call(function () {
             TimetableCreate::handle();
         })->everyMinute();
