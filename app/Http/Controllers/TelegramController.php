@@ -248,8 +248,7 @@ class TelegramController extends Controller
 
     protected function sendMessage($message, $parse_html = FALSE)
     {
-        TimetableNoticeEnd::handle();
-        dd(1);
+//        dd(1);
         try {
             $data = [
                 'chat_id' => $this->chat_id,
@@ -330,7 +329,8 @@ class TelegramController extends Controller
 
     public function sendAll()
     {
-        ;
+        TimetableNoticeEnd::handle();
+
         $users = \App\User::query()->whereNotNull('group_id')->whereNotNull('tg_id')->get();
         foreach ($users as $user) {
             $this->chat_id = $user->tg_id;
