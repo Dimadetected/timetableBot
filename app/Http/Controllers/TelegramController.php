@@ -50,41 +50,10 @@ class TelegramController extends Controller
     public function __construct()
     {
         $this->telegram = new Api(config('telegram.bots.mybot.token'));
-        $this->redBtnBot = new Api(config('telegram.bots.redBtn.token'));
         $this->telegramSecond = new TelegramService(config('telegram.bots.mybot.token'));
 
     }
 
-    public function redBtnBot(Request $request)
-    {
-        $this->chat_id = $request['message']['chat']['id'] ?? $request['callback_query']['from']['id'];
-        $this->text = $request['message']['text'] ?? $request['callback_query']['data'];
-        logger($request['message']);
-        $user = RedBtnUser::query()->firstOrCreate(['tg_id' => $this->chat_id], ['step' => 0]);
-        $question = RedBtnQuestion::query()->where('step', $user->step)->first();
-
-        logger($user);
-        logger($question);
-        if (isset($request['callback_query']))
-            logger($request['callback_query']);
-
-        $inline_keyboard = Keyboard::make()
-            ->inline()
-            ->row(
-                Keyboard::inlineButton(["text" => "Кнопка Красная", 'callback_data' => 'Кнопка'])
-            );
-
-        $this->redBtnBot->sendMessage([
-            'chat_id' => $this->chat_id,
-            'text' => $question->text,
-            'reply_markup' => $inline_keyboard,
-        ]);
-        $user->step = $question->step + 1;
-        $user->msg_id = $request['message']['message_id'] ?? $request['callback_query']['message']['message_id'];
-        $user->save();
-
-        return 200;
-    }
 
     public function sendAllUsers()
     {
@@ -145,8 +114,8 @@ class TelegramController extends Controller
                         if (!is_numeric($letter) and $letter != '.')
                             return 200;
 
-                    if (Carbon::parse($this->text . '.2020'))
-                        $this->timetableSend($this->text . '.2020');
+                    if (Carbon::parse($this->text . '.2021'))
+                        $this->timetableSend($this->text . '.2021');
                 }
                 if (stristr($this->text, ':')) {
                     $date = explode(':', $this->text);
