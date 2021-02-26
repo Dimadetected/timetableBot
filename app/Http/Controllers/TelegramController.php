@@ -13,6 +13,7 @@ use App\Telegram;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use mysql_xdevapi\Exception;
 use Telegram\Bot\Api;
 use Telegram\Bot\Keyboard\Keyboard;
 
@@ -113,9 +114,12 @@ class TelegramController extends Controller
                     foreach (str_split($this->text) as $letter)
                         if (!is_numeric($letter) and $letter != '.')
                             return 200;
-
+                    try {
                     if (Carbon::parse($this->text . '.2021'))
                         $this->timetableSend($this->text . '.2021');
+                    }catch (\Throwable $e){
+                        $this->sendMessage("Всего лишь один вопрос... ЗАЧЕМ?");
+                    }
                 }
                 if (stristr($this->text, ':')) {
                     $date = explode(':', $this->text);
