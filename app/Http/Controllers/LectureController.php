@@ -21,6 +21,8 @@ class LectureController extends Controller
 
     public function index()
     {
+        abort_if(auth()->user()->users_type_id != 1, 401);
+
         $items = Lecture::query()->where('group_id',auth()->user()->group_id)->get();
 
         $routes = $this->routes;

@@ -32,6 +32,8 @@ class TemplateController extends Controller
 
     public function index()
     {
+        abort_if(auth()->user()->users_type_id != 1, 401);
+
         $items = Template::query()->where('group_id',auth()->user()->group_id)->get();
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));

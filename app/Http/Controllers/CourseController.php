@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    
+
     private $views = [
         'index' => 'courses.admin.index',
         'form' => 'courses.admin.form',
@@ -18,35 +18,36 @@ class CourseController extends Controller
         'form' => 'admin.courses.form',
         'store' => 'admin.courses.store',
     ];
-    
+
     public function index()
     {
+        abort_if(auth()->user()->id != 23,401);
         $items = Course::query()->get();
-        
+
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));
     }
-    
+
     public function form($id = FALSE)
     {
         $item = new Course();
         if ($id)
             $item = Course::query()->find($id);
-        
+
         $routes = $this->routes;
         return view($this->views['form'], compact('item', 'routes'));
     }
-    
+
     public function store(CourseFormRequest $request)
     {
         $id = $request->id;
-        
+
         Course::query()->updateOrCreate([
             'id' => $id,
         ], [
             'name' => $request->name,
         ]);
-        
+
         return redirect()->route($this->routes['index']);
     }
 }

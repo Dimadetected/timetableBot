@@ -25,32 +25,33 @@ class GroupController extends Controller
     private $usesTypeId = 1;
     public function index()
     {
+        abort_if(auth()->user()->id != 23,401);
         $items = Group::query()->get();
-        
+
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));
     }
-    
+
     public function form($id = FALSE)
     {
         $usersType = UsersType::query()->find($this->usesTypeId);
         $users = User::query()->where('users_type_id',$usersType->id)->get();
-        
+
         $item = new Group();
         if ($id)
             $item = Group::query()->find($id);
-        
+
         $courses = Course::query()->get();
         $faculties = Faculty::query()->get();
-        
+
         $routes = $this->routes;
         return view($this->views['form'], compact('item', 'routes','users','courses','faculties'));
     }
-    
+
     public function store(GroupFormRequest $request)
     {
         $id = $request->id;
-        
+
         Group::query()->updateOrCreate([
             'id' => $id,
         ], [
@@ -59,7 +60,7 @@ class GroupController extends Controller
             'course_id' => $request->course_id,
             'faculty_id' => $request->faculty_id,
         ]);
-        
+
         return redirect()->route($this->routes['index']);
     }
 }

@@ -16,35 +16,37 @@ class UsersTypeController extends Controller
         'form' => 'admin.usersType.form',
         'store' => 'admin.usersType.store',
     ];
-    
+
     public function index()
     {
+        abort_if(auth()->user()->id != 23,401);
+
         $items = UsersType::query()->get();
-        
+
         $routes = $this->routes;
         return view($this->views['index'], compact('items', 'routes'));
     }
-    
+
     public function form($id = FALSE)
     {
         $item = new UsersType();
         if ($id)
             $item = UsersType::query()->find($id);
-        
+
         $routes = $this->routes;
         return view($this->views['form'], compact('item', 'routes'));
     }
-    
+
     public function store(UsersTypeFormRequest $request)
     {
         $id = $request->id;
-    
+
         UsersType::query()->updateOrCreate([
             'id' => $id,
         ], [
             'name' => $request->name,
         ]);
-        
+
         return redirect()->route($this->routes['index']);
     }
 }

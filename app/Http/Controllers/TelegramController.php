@@ -19,6 +19,7 @@ use Telegram\Bot\Keyboard\Keyboard;
 
 class TelegramController extends Controller
 {
+
     protected $telegram, $redBtnBot, $telegramSecond;
     protected $chat_id;
     protected $text;
@@ -32,6 +33,9 @@ class TelegramController extends Controller
         '6' => 'суббота',
         '0' => 'воскресенье',
     ];
+
+
+    private $link = "https://kubsubot.ru/login";
 
     public function getMe()
     {
@@ -103,6 +107,18 @@ class TelegramController extends Controller
                 $this->newUser();
             } else {
 
+                if ($this->text == "/auth" and $user->stCheck()) {
+                    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    $charactersLength = strlen($characters);
+                    $randomString = '';
+                    for ($i = 0; $i < 10; $i++) {
+                        $randomString .= $characters[rand(0, $charactersLength - 1)];
+                    }
+                    $user->update(["password" => bcrypt($randomString)]);
+                    $text = "Для входа в личный кабинет перейдите по ссылке: \n" . $this->link . "\n" . "Логин: " . $user->email . "\nПароль" . $randomString;
+                    $this->sendMessage($text);
+                }
+
                 if (stristr($this->text, '.pdf'))
                     return 200;
 
@@ -115,9 +131,9 @@ class TelegramController extends Controller
                         if (!is_numeric($letter) and $letter != '.')
                             return 200;
                     try {
-                    if (Carbon::parse($this->text . '.2021'))
-                        $this->timetableSend($this->text . '.2021');
-                    }catch (\Throwable $e){
+                        if (Carbon::parse($this->text . '.2021'))
+                            $this->timetableSend($this->text . '.2021');
+                    } catch (\Throwable $e) {
                         $this->sendMessage("Всего лишь один вопрос... ЗАЧЕМ?");
                     }
                 }
