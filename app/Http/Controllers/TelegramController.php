@@ -115,7 +115,7 @@ class TelegramController extends Controller
                         $randomString .= $characters[rand(0, $charactersLength - 1)];
                     }
                     $user->update(["password" => bcrypt($randomString)]);
-                    $text = "Для входа в личный кабинет перейдите по ссылке: \n" . $this->link . "\n" . "Логин: " . $user->email . "\nПароль" . $randomString;
+                    $text = "Для входа в личный кабинет перейдите по ссылке: \n" . $this->link . "\n" . "Логин: " . $user->email . "\nПароль: " . $randomString;
                     $this->sendMessage($text);
                 }
 

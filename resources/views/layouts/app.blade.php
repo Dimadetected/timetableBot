@@ -32,16 +32,18 @@
                 </button>
                 <div class="collapse navbar-collapse " id="navbarNavAltMarkup">
                     <div class="navbar-nav ">
-                        @if(auth()->user()->stCheck())
-                            <a class="nav-link" href="{{route('admin.users.index')}}">Пользователи</a>
-                            <a class="nav-link" href="{{route('admin.lectures.index')}}">Предметы</a>
-                            <a class="nav-link" href="{{route('admin.templates.index')}}">Шаблоны</a>
-                        @endif
-                        @if(auth()->user()->id == 23)
-                            <a class="nav-link" href="{{route('admin.courses.index')}}">Курсы</a>
-                            <a class="nav-link" href="{{route('admin.faculties.index')}}">Факультеты</a>
-                            <a class="nav-link" href="{{route('admin.groups.index')}}">Группы</a>
-                            <a class="nav-link" href="{{route('admin.usersType.index')}}">Типы юзеров</a>
+                        @if(auth()->check())
+                            @if(auth()->user()->stCheck())
+                                <a class="nav-link" href="{{route('admin.users.index')}}">Пользователи</a>
+                                <a class="nav-link" href="{{route('admin.lectures.index')}}">Предметы</a>
+                                <a class="nav-link" href="{{route('admin.templates.index')}}">Шаблоны</a>
+                            @endif
+                            @if(auth()->user()->id == 23)
+                                <a class="nav-link" href="{{route('admin.courses.index')}}">Курсы</a>
+                                <a class="nav-link" href="{{route('admin.faculties.index')}}">Факультеты</a>
+                                <a class="nav-link" href="{{route('admin.groups.index')}}">Группы</a>
+                                <a class="nav-link" href="{{route('admin.usersType.index')}}">Типы юзеров</a>
+                            @endif
                         @endif
                         @guest
                             <a class="nav-link " href="{{ route('login') }}">{{ __('Login') }}</a>
