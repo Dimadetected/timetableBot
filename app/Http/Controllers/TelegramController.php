@@ -59,7 +59,6 @@ class TelegramController extends Controller
 
     }
 
-
     public function sendAllUsers()
     {
         $users = User::query()->whereNotNull('tg_id')->get();
